@@ -22,7 +22,6 @@ jobs:
         pip install pylint
         pip install -r requirements.txt
 
-    - name: Test the server-side programs
     - name: Analysing server_manager.py
       run: |
         pylint ./Server-Side/server_manager.py
