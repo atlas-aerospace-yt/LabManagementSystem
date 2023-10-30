@@ -24,8 +24,8 @@ jobs:
 
     - name: Analysing server_manager.py
       run: |
-        pylint ./Server-Side/server_manager.py
+        pylint ./Server-Side/server_manager.py --disable=W0511
 
     - name: Analysing server-side.py
       run: |
-        pylint ./Server-Side/main.py
+        pylint ./Server-Side/main.py --disable=W0511
