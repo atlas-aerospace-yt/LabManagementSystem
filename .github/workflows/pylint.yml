@@ -26,6 +26,10 @@ jobs:
       run: |
         pylint ./Server-Side/server_manager.py --disable=W0511
 
+    - name: Analysing database_manager.py
+      run: |
+        pylint ./Server-Side/database_manager.py --disable=W0511
+
     - name: Analysing server-side.py
       run: |
         pylint ./Server-Side/main.py --disable=W0511
