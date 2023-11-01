@@ -91,9 +91,16 @@ class DatabaseManager:
             str: the result from the sql command.
         """
 
-        self.cursor.execute(command)
-        self.cursor.commit()
-        return self.cursor.fetchall
+        # The try except is needed incase the admins enter any incorrect
+        # commands
+        try:
+            print("Running command: " + command)
+            self.cursor.execute(command)
+            return self.cursor.fetchall()
+        except sqlite3.Error as error:
+            print("SQL Error:\n" + str(error) + "\n",end="")
+
+        return None
 
     def end_connection(self):
         """
@@ -101,4 +108,5 @@ class DatabaseManager:
         """
 
         self.cursor.close()
+        self.connection.commit()
         self.connection.close()
