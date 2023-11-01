@@ -3,6 +3,8 @@ This file contains the ServerManager class.
 """
 import threading
 
+from database_manager import DatabaseManager
+
 GREETING = "Welcome to the admin terminal!\n"
 
 INVALID_INPUT = "Invalid input!\n"
@@ -23,18 +25,21 @@ class ServerManager:
     into the application and connects the connection manager
     to the database manager.
 
+    TODO Add SQL commands to database manager
+
     TODO comment attributes
     TODO comment methods
     """
 
     def __init__(self):
         self.terminal_thread = threading.Thread(target=self.threaded_admin_input)
-        self.commands = []
+        self.admin_commands = []
+        self.sql_commands = []
         self.running = True
 
         # TODO add the other managers
         #self.connection_manager = ConnectionManager()
-        #self.database_manager = DatabaseManager()
+        self.database_manager = DatabaseManager()
 
     def start_admin_terminal(self):
         """
@@ -59,7 +64,8 @@ class ServerManager:
             invalid = True
             command = input(">>> ")
             if command[:3].lower() == "sql":
-                print("Your command: " + command[4:])
+                command = command[4:]
+                self.sql_commands.append(command)
                 invalid = False
             else:
                 for cmd in COMMAND_LIST:
@@ -67,3 +73,5 @@ class ServerManager:
                         print("Your command: " + command[len(cmd)+1:])
                         invalid = False
                         break
+
+        self.running = False
