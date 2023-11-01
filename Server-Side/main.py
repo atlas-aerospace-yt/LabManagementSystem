@@ -19,8 +19,7 @@ if __name__ == "__main__":
     # TODO main loop
     my_server = ServerManager()
     my_server.start_admin_terminal()
-    while my_server.running:
-        pass
+    my_server.main_loop()
 
     # TODO At the end of the main loop
     my_server.database_manager.end_connection()
