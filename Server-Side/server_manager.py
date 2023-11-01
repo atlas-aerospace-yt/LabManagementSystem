@@ -33,8 +33,8 @@ class ServerManager:
 
     def __init__(self):
         self.terminal_thread = threading.Thread(target=self.threaded_admin_input)
-        self.admin_commands = []
-        self.sql_commands = []
+        #self.admin_commands = {}
+        self.sql_commands = {}
         self.running = True
 
         # TODO add the other managers
@@ -65,13 +65,34 @@ class ServerManager:
             command = input(">>> ")
             if command[:3].lower() == "sql":
                 command = command[4:]
-                self.sql_commands.append(command)
+                self.sql_commands["admin"] = (command)
+                invalid = False
+            elif command == "":
                 invalid = False
             else:
                 for cmd in COMMAND_LIST:
                     if command.lower()[:len(cmd)] == cmd:
-                        print("Your command: " + command[len(cmd)+1:])
+                        #self.admin_commands.append(command[len(cmd)+1:])
                         invalid = False
                         break
 
         self.running = False
+
+    def main_loop(self):
+        """
+        This is the continuous loop which manages the server side of
+        the application. It processes commands (admin and sql) with
+        the use of a queue.
+        """
+
+        while self.running:
+            sql_keys = list(self.sql_commands.keys())
+            if len(sql_keys) > 0:
+                sql_command = self.sql_commands[sql_keys[0]]
+                response = self.database_manager.send_command(sql_command)
+                if sql_keys[0] == "admin":
+                    if response is not None:
+                        print("Results: ")
+                        print(*response, sep="\n")
+                        print(">>> ",end="")
+                    del self.sql_commands[sql_keys[0]]
