@@ -79,7 +79,7 @@ class ServerManager:
             # Process the commands
             if command[:3].lower() == "sql":
                 command = command[4:]
-                self.sql_commands["admin"] = (command)
+                self.sql_commands["admin"] = command
                 invalid = False
             elif command == "":
                 invalid = False
