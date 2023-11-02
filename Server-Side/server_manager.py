@@ -2,6 +2,7 @@
 This file contains the ServerManager class.
 """
 import threading
+import time
 
 from database_manager import DatabaseManager
 
@@ -9,15 +10,15 @@ GREETING = "Welcome to the admin terminal!\n"
 
 INVALID_INPUT = "Invalid input!\n"
 
+COMMAND_LIST = {"disconnect":"(all or ip) - disconects a specific user or all.",
+                "info":"to get information about the activity."}
+
 MENU = """The options for the admin terminal are:\n
     \"exit\" - ends the server side program.
-    \"disconnect-\"(all or ip) - disconects a specific user or all.
-    \"get_info\" - to get information about the activity.
-    \"SQL-\"(command) - run an SQL command on the servers\n"""
+    \"SQL\"(command) - run an SQL command on the servers\n"""
 
-COMMAND_LIST = ["disconnect",
-                "get_info"]
-
+for item in list(COMMAND_LIST.keys()):
+    MENU += f"    \"{item}\" - {COMMAND_LIST[item]}\n"
 
 class ServerManager:
     """
@@ -33,7 +34,7 @@ class ServerManager:
 
     def __init__(self):
         self.terminal_thread = threading.Thread(target=self.threaded_admin_input)
-        #self.admin_commands = {}
+        self.admin_commands = []
         self.sql_commands = {}
         self.running = True
 
@@ -49,7 +50,9 @@ class ServerManager:
 
     def threaded_admin_input(self):
         """
-        This function threads the administrator input.
+        This function threads the administrator input as the database cannot
+        be accessed by another thread so the main thread needs to be the
+        database.
         """
         print(GREETING)
         print(MENU)
@@ -58,11 +61,22 @@ class ServerManager:
         invalid = False
 
         while command.lower() != "exit":
+
+            # Wait for the last command to run
+            while "admin" in list(self.sql_commands.keys()):
+                pass
+            # TODO complete the admin commands
+            #while len(self.admin_commands) > 0:
+            #    pass
+
+            # Help the user if the command was invalid
             if invalid:
                 print(INVALID_INPUT)
                 print(MENU)
             invalid = True
             command = input(">>> ")
+
+            # Process the commands
             if command[:3].lower() == "sql":
                 command = command[4:]
                 self.sql_commands["admin"] = (command)
@@ -72,11 +86,23 @@ class ServerManager:
             else:
                 for cmd in COMMAND_LIST:
                     if command.lower()[:len(cmd)] == cmd:
-                        #self.admin_commands.append(command[len(cmd)+1:])
+                        self.admin_commands.append(command[len(cmd)+1:])
                         invalid = False
                         break
 
         self.running = False
+
+    def parse_database_output(self, output):
+        """
+        This function processes the output which is returned from the database
+        manager so that it is easy to read on screen for the admins.
+
+        Args:
+            ouptut(str): the string that has been output by the database manager
+        """
+        for item in output:
+            if item is not None:
+                print(item)
 
     def main_loop(self):
         """
@@ -86,13 +112,14 @@ class ServerManager:
         """
 
         while self.running:
+
+            # Check if there is a command to run
             sql_keys = list(self.sql_commands.keys())
             if len(sql_keys) > 0:
                 sql_command = self.sql_commands[sql_keys[0]]
-                response = self.database_manager.send_command(sql_command)
+                output = self.database_manager.send_command(sql_command)
+
                 if sql_keys[0] == "admin":
-                    if response is not None:
-                        print("Results: ")
-                        print(*response, sep="\n")
-                        print(">>> ",end="")
-                    del self.sql_commands[sql_keys[0]]
+                    self.parse_database_output(output)
+
+                del self.sql_commands[sql_keys[0]]

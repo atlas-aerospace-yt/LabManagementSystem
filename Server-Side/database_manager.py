@@ -96,11 +96,11 @@ class DatabaseManager:
         try:
             print("Running command: " + command)
             self.cursor.execute(command)
-            return self.cursor.fetchall()
+            output = self.cursor.fetchall()
         except sqlite3.Error as error:
-            print("SQL Error:\n" + str(error) + "\n",end="")
+            output = [str(error)]
 
-        return None
+        return output
 
     def end_connection(self):
         """
