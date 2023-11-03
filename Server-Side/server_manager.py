@@ -2,7 +2,6 @@
 This file contains the ServerManager class.
 """
 import threading
-import time
 
 from database_manager import DatabaseManager
 
@@ -17,8 +16,8 @@ MENU = """The options for the admin terminal are:\n
     \"exit\" - ends the server side program.
     \"SQL\"(command) - run an SQL command on the servers\n"""
 
-for item in list(COMMAND_LIST.keys()):
-    MENU += f"    \"{item}\" - {COMMAND_LIST[item]}\n"
+for menu_item in list(COMMAND_LIST.keys()):
+    MENU += f"    \"{menu_item}\" - {COMMAND_LIST[menu_item]}\n"
 
 class ServerManager:
     """
@@ -63,7 +62,7 @@ class ServerManager:
         while command.lower() != "exit":
 
             # Wait for the last command to run
-            while "admin" in list(self.sql_commands.keys()):
+            while "admin" in self.sql_commands:
                 pass
             # TODO complete the admin commands
             #while len(self.admin_commands) > 0:
