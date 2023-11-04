@@ -26,7 +26,7 @@ class Connection:
         self.address = client_address
         self.disconnected = False
         self.data = []
-        
+
         self.connection = threading.Thread(target=self.connection_loop)
         self.connection.start()
 
@@ -46,7 +46,7 @@ class Connection:
                 break
 
             print(f"Received: {request}")
-            
+
             response = "accepted".encode("utf-8")
             self.socket.send(response)
             time.sleep(2)
@@ -60,7 +60,8 @@ class Connection:
         Args:
             data(str): the data that is to be sent to the client side
         """
-        pass
+        data = data.encode("utf-8")
+        self.socket.send(data)
 
 
 class ConnectionManager:
@@ -98,13 +99,16 @@ class ConnectionManager:
         Returns:
             list: the data to be processed.
         """
-        pass
+        commands = []
+        for connection in self.connections:
+            for command in connection.data:
+                commands.append(command)
 
 # Check if this file is being run
 if __name__ == "__main__":
     my_server = ConnectionManager()
     while True:
         for item in my_server.connections:
-            if item.disconnected == True:
+            if item.disconnected is True:
                 del my_server.connections[my_server.connections.index(item)]
                 print(f"Removed: {item.address[0]}:{item.address[1]}")

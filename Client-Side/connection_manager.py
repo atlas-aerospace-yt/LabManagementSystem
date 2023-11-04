@@ -47,7 +47,8 @@ class ConnectionManager:
         Args:
             data(str): the data that is to be sent to the client side
         """
-        pass
+        data = data.encode("utf-8")
+        self.socket.send(data)
 
 
 # Check if this file is being run this loop is inspired by:
