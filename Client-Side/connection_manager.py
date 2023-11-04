@@ -21,3 +21,5 @@ class ConnectionManager:
 # Check if this file is being run
 if __name__ == "__main__":
     my_connection = ConnectionManager()
+    while True:
+        pass
