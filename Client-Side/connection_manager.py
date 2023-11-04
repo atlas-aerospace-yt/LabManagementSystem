@@ -18,8 +18,8 @@ class ConnectionManager:
     """
 
     def __init__(self):
-        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client.connect((IP_ADDRESS, PORT))
+        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server.connect((IP_ADDRESS, PORT))
 
     def connection_loop(self):
         """
@@ -27,17 +27,17 @@ class ConnectionManager:
         """
         while True:
             msg = input("Enter message: ")
-            self.client.send(msg.encode("UTF-8")[:1024])
+            self.server.send(msg.encode("UTF-8")[:1024])
 
-            response = self.client.recv(1024)
+            response = self.server.recv(1024)
             response = response.decode("utf-8")
-            
+
             if response.lower() == "closed":
                 break
 
             print(f"Received: {response}")
-        
-        self.client.close()
+
+        self.server.close()
         print("Connection to server closed")
 
     def send_data(self, data):
@@ -48,7 +48,7 @@ class ConnectionManager:
             data(str): the data that is to be sent to the client side
         """
         data = data.encode("utf-8")
-        self.socket.send(data)
+        self.server.send(data)
 
 
 # Check if this file is being run this loop is inspired by:
