@@ -25,6 +25,7 @@ class Connection:
         self.socket = client_socket
         self.address = client_address
         self.disconnected = False
+        self.running = True
         self.data = []
 
         self.connection = threading.Thread(target=self.connection_loop)
@@ -34,7 +35,7 @@ class Connection:
         """
         Loops the connection on a thread.
         """
-        while True:
+        while self.running:
             try:
                 request = self.socket.recv(1024)
                 request = request.decode("utf-8")
@@ -46,7 +47,6 @@ class Connection:
                 break
 
             print(f"Received: {request}")
-
             response = "accepted".encode("utf-8")
             self.socket.send(response)
             time.sleep(2)
@@ -72,6 +72,7 @@ class ConnectionManager:
 
     def __init__(self):
         self.new_data = False
+        self.running = True
         self.connections = []
 
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -84,13 +85,22 @@ class ConnectionManager:
         """
         Loops waiting for connections to add them to the connections list.
         """
-        while True:
+        while self.running:
             print(f"Server listening... Number of connections: {len(self.connections)}")
             self.server.listen(0)
 
             client_socket, client_address = self.server.accept()
             print(f"Added a new connection to: {client_address[0]}:{client_address[1]}")
             self.connections.append(Connection(client_socket, client_address))
+
+    def get_num_of_connection(self) -> int:
+        """
+        Gets the number of connections to the server.
+
+        Returns:
+            int: the number of connected users.
+        """
+        return len(self.connections)
 
     def get_all_new_data(self) -> list:
         """
@@ -103,6 +113,16 @@ class ConnectionManager:
         for connection in self.connections:
             for command in connection.data:
                 commands.append(command)
+
+    def end_connections(self):
+        """
+        Deletes all connections to the clients.
+        """
+        self.running = False
+
+        for i, connection in enumerate(self.connections):
+            connection.running = False
+            del self.connections[i]
 
 # Check if this file is being run
 if __name__ == "__main__":
