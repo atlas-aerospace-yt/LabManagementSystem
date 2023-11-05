@@ -4,6 +4,7 @@ This file contains the ServerManager class.
 import threading
 
 from database_manager import DatabaseManager
+from connection_manager import ConnectionManager
 
 GREETING = "Welcome to the admin terminal!\n"
 
@@ -32,27 +33,18 @@ class ServerManager:
     """
 
     def __init__(self):
-        self.terminal_thread = threading.Thread(target=self.threaded_admin_input)
         self.admin_commands = []
-        self.sql_commands = {}
-        self.running = True
+        self.sql_commands = []
 
-        # TODO add the other managers
-        #self.connection_manager = ConnectionManager()
+        self.connection_manager = ConnectionManager()
         self.database_manager = DatabaseManager()
 
-    def start_admin_terminal(self):
-        """
-        This function triggers the admin terminal.
-        """
-        self.terminal_thread.start()
+    """def threaded_admin_input(self):
 
-    def threaded_admin_input(self):
-        """
         This function threads the administrator input as the database cannot
         be accessed by another thread so the main thread needs to be the
         database.
-        """
+
         print(GREETING)
         print(MENU)
 
@@ -87,17 +79,25 @@ class ServerManager:
                     if command.lower()[:len(cmd)] == cmd:
                         self.admin_commands.append(command[len(cmd)+1:])
                         invalid = False
-                        break
+                        break"""
 
-        self.running = False
 
-    def parse_database_output(self, output):
+    def enque_sql(self, command:str):
+        """
+        Enque an SQL command which is to be run.
+        
+        Args:
+            command(str): the SQL command
+        """
+        self.sql_commands.append(["admin", command])
+
+    def parse_database_output(self, output:list):
         """
         This function processes the output which is returned from the database
         manager so that it is easy to read on screen for the admins.
 
         Args:
-            ouptut(str): the string that has been output by the database manager
+            ouptut(list): the string that has been output by the database manager
         """
         for item in output:
             if item is not None:
@@ -105,20 +105,22 @@ class ServerManager:
 
     def main_loop(self):
         """
-        This is the continuous loop which manages the server side of
-        the application. It processes commands (admin and sql) with
-        the use of a queue.
+        This function gets called every frame
         """
 
-        while self.running:
+        # remove all disconnected users
+        for item in self.connection_manager.connections:
+            if item.disconnected is True:
+                del self.connection_manager.connections[
+                    self.connection_manager.connections.index(item)]
+                print(f"Removed: {item.address[0]}:{item.address[1]}")
+                print(">>> ", end="")
 
-            # Check if there is a command to run
-            sql_keys = list(self.sql_commands.keys())
-            if len(sql_keys) > 0:
-                sql_command = self.sql_commands[sql_keys[0]]
-                output = self.database_manager.send_command(sql_command)
+        # Check if there is an SQL command to run
+        if len(self.sql_commands) > 0:
+            sql_command = self.sql_commands.pop(0)
+            output = self.database_manager.send_command(sql_command[1])
 
-                if sql_keys[0] == "admin":
-                    self.parse_database_output(output)
-
-                del self.sql_commands[sql_keys[0]]
+            # Check if the command is an admin command
+            if sql_command[0] == "admin":
+                self.parse_database_output(output)
