@@ -1,7 +1,6 @@
 """
 This file contains the ServerManager class.
 """
-import threading
 
 from database_manager import DatabaseManager
 from connection_manager import ConnectionManager
@@ -39,47 +38,47 @@ class ServerManager:
         self.connection_manager = ConnectionManager()
         self.database_manager = DatabaseManager()
 
-    """def threaded_admin_input(self):
-
-        This function threads the administrator input as the database cannot
-        be accessed by another thread so the main thread needs to be the
-        database.
-
-        print(GREETING)
-        print(MENU)
-
-        command = ""
-        invalid = False
-
-        while command.lower() != "exit":
-
-            # Wait for the last command to run
-            while "admin" in self.sql_commands:
-                pass
-            # TODO complete the admin commands
-            #while len(self.admin_commands) > 0:
-            #    pass
-
-            # Help the user if the command was invalid
-            if invalid:
-                print(INVALID_INPUT)
-                print(MENU)
-            invalid = True
-            command = input(">>> ")
+    #def threaded_admin_input(self):
+#
+ #       This function threads the administrator input as the database cannot
+  #      be accessed by another thread so the main thread needs to be the
+   #     database.
+#
+ #       print(GREETING)
+  #      print(MENU)
+#
+ #       command = ""
+  #      invalid = False
+#
+ #       while command.lower() != "exit":
+#
+ #           # Wait for the last command to run
+  #          while "admin" in self.sql_commands:
+   #             pass
+    #        # TODO complete the admin commands
+     #       #while len(self.admin_commands) > 0:
+      #      #    pass
+#
+ #           # Help the user if the command was invalid
+  #          if invalid:
+   #             print(INVALID_INPUT)
+    #            print(MENU)
+     #       invalid = True
+      #       command = input(">>> ")
 
             # Process the commands
-            if command[:3].lower() == "sql":
-                command = command[4:]
-                self.sql_commands["admin"] = command
-                invalid = False
-            elif command == "":
-                invalid = False
-            else:
-                for cmd in COMMAND_LIST:
-                    if command.lower()[:len(cmd)] == cmd:
-                        self.admin_commands.append(command[len(cmd)+1:])
-                        invalid = False
-                        break"""
+      #      if command[:3].lower() == "sql":
+       #         command = command[4:]
+        #        self.sql_commands["admin"] = command
+         #       invalid = False
+          #  elif command == "":
+           #     invalid = False
+            #else:
+             #   for cmd in COMMAND_LIST:
+              #      if command.lower()[:len(cmd)] == cmd:
+               #         self.admin_commands.append(command[len(cmd)+1:])
+                #        invalid = False
+                 #       break
 
 
     def enque_sql(self, command:str):
