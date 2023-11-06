@@ -113,7 +113,6 @@ class ServerManager:
                 del self.connection_manager.connections[
                     self.connection_manager.connections.index(item)]
                 print(f"Removed: {item.address[0]}:{item.address[1]}")
-                print(">>> ", end="")
 
         # Check if there is an SQL command to run
         if len(self.sql_commands) > 0:
