@@ -4,7 +4,6 @@ This file contains the UserInterface class.
 
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtWidgets as qtw
-from PyQt5.QtCore import QCoreApplication
 
 from server_manager import ServerManager
 from Ui.server_side import Ui_MainWindow as terminal
@@ -100,7 +99,7 @@ class UserInterface(qtw.QMainWindow):
         valid = False
 
         if command.lower() == "exit":
-            QCoreApplication.instance().quit()
+            qtw.QCoreApplication.instance().quit()
             valid = True
         elif command[:3].lower() == "sql":
             # SQL is special as it joins a different queue.
