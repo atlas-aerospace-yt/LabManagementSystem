@@ -131,7 +131,7 @@ class ConnectionManager:
             connection.disconnect()
 
             del self.connections[i]
-        
+
         # Break out of the loop
         fake_connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         fake_connection.connect((IP_ADDRESS, PORT))
