@@ -39,7 +39,7 @@ class Connection:
             try:
                 request = self.socket.recv(1024)
                 request = request.decode("utf-8")
-            except ConnectionResetError:
+            except (ConnectionResetError, ConnectionAbortedError):
                 break
 
             if request.lower() == "close":
@@ -62,6 +62,12 @@ class Connection:
         """
         data = data.encode("utf-8")
         self.socket.send(data)
+
+    def disconnect(self):
+        """
+        Disconnects the user from the server.
+        """
+        self.socket.close()
 
 
 class ConnectionManager:
@@ -122,7 +128,16 @@ class ConnectionManager:
 
         for i, connection in enumerate(self.connections):
             connection.running = False
+            connection.disconnect()
+
             del self.connections[i]
+        
+        # Break out of the loop
+        fake_connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        fake_connection.connect((IP_ADDRESS, PORT))
+        fake_connection.send("close".encode("UTF-8"))
+        fake_connection.close()
+
 
 # Check if this file is being run
 if __name__ == "__main__":
