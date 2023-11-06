@@ -5,20 +5,6 @@ This file contains the ServerManager class.
 from database_manager import DatabaseManager
 from connection_manager import ConnectionManager
 
-GREETING = "Welcome to the admin terminal!\n"
-
-INVALID_INPUT = "Invalid input!\n"
-
-COMMAND_LIST = {"disconnect":"(all or ip) - disconects a specific user or all.",
-                "info":"to get information about the activity."}
-
-MENU = """The options for the admin terminal are:\n
-    \"exit\" - ends the server side program.
-    \"SQL\"(command) - run an SQL command on the servers\n"""
-
-for menu_item in list(COMMAND_LIST.keys()):
-    MENU += f"    \"{menu_item}\" - {COMMAND_LIST[menu_item]}\n"
-
 class ServerManager:
     """
     The server manager class handles all of the admin inputs
@@ -32,56 +18,16 @@ class ServerManager:
     """
 
     def __init__(self):
+        self.admin_commands = [] # a 1D list
+        self.sql_commands = [] # a 2D list
+
+        self.sql_results = []
         self.admin_commands = []
-        self.sql_commands = []
 
         self.connection_manager = ConnectionManager()
         self.database_manager = DatabaseManager()
 
-    #def threaded_admin_input(self):
-#
- #       This function threads the administrator input as the database cannot
-  #      be accessed by another thread so the main thread needs to be the
-   #     database.
-#
- #       print(GREETING)
-  #      print(MENU)
-#
- #       command = ""
-  #      invalid = False
-#
- #       while command.lower() != "exit":
-#
- #           # Wait for the last command to run
-  #          while "admin" in self.sql_commands:
-   #             pass
-    #        # TODO complete the admin commands
-     #       #while len(self.admin_commands) > 0:
-      #      #    pass
-#
- #           # Help the user if the command was invalid
-  #          if invalid:
-   #             print(INVALID_INPUT)
-    #            print(MENU)
-     #       invalid = True
-      #       command = input(">>> ")
-
-            # Process the commands
-      #      if command[:3].lower() == "sql":
-       #         command = command[4:]
-        #        self.sql_commands["admin"] = command
-         #       invalid = False
-          #  elif command == "":
-           #     invalid = False
-            #else:
-             #   for cmd in COMMAND_LIST:
-              #      if command.lower()[:len(cmd)] == cmd:
-               #         self.admin_commands.append(command[len(cmd)+1:])
-                #        invalid = False
-                 #       break
-
-
-    def enque_sql(self, command:str):
+    def enqueue_sql(self, command:str):
         """
         Enque an SQL command which is to be run.
         
@@ -90,24 +36,69 @@ class ServerManager:
         """
         self.sql_commands.append(["admin", command])
 
-    def parse_database_output(self, output:list):
+    def dequeue_admin_sql(self) -> str:
+        """
+        Deques the SQL formatted result.
+
+        Returns:
+            str: The SQL result formatted with HTML
+        """
+
+        # Check that there is data to be returned
+        if len(self.sql_results) > 0:
+            for result in self.sql_results:
+                if result[0] == "admin":
+                    del self.sql_results[self.sql_results.index(result)]
+                    return result[1]
+
+        # Return an empty string if there is nothing to deque
+        return ""
+
+    def enqueue_command(self, command:str):
+        """
+        Enque an admin terminal command.
+
+        Args:
+            command (str): the command to be run
+        """
+        self.admin_commands.append(command)
+
+    def dequeue_command(self) -> str:
+        """
+        Dequeu
+
+        Returns:
+            str: _description_
+        """
+        if len(self.admin_commands) > 0:
+            return self.admin_commands.pop(0)
+        return ""
+
+    def parse_database_output(self, output:list) -> str:
         """
         This function processes the output which is returned from the database
         manager so that it is easy to read on screen for the admins.
 
         Args:
             ouptut(list): the string that has been output by the database manager
+
+        Returns:
+            str: the output from the SQL query with \n breaks
         """
+        result = ""
+
         for item in output:
             if item is not None:
-                print(item)
+                result += str(item) + "\n"
+
+        return result
 
     def main_loop(self):
         """
         This function gets called every frame
         """
 
-        # remove all disconnected users
+        # Remove all disconnected users
         for item in self.connection_manager.connections:
             if item.disconnected is True:
                 del self.connection_manager.connections[
@@ -118,7 +109,11 @@ class ServerManager:
         if len(self.sql_commands) > 0:
             sql_command = self.sql_commands.pop(0)
             output = self.database_manager.send_command(sql_command[1])
+            self.sql_results.append([sql_command[0], self.parse_database_output(output)])
 
-            # Check if the command is an admin command
-            if sql_command[0] == "admin":
-                self.parse_database_output(output)
+        # Check if there is an admin command to run
+        if len(self.admin_commands) > 0:
+            admin_command = self.admin_commands.pop(0)
+            # TODO does not do anything yet
+            self.admin_commands.append(admin_command)
+            
