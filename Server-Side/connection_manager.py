@@ -3,17 +3,15 @@ This file contains the ConnectionManager class
 
 The code is inspired by:
 https://www.datacamp.com/tutorial/a-complete-guide-to-socket-programming-in-python
-
-TODO Commenting
-TODO Connect with main.py
 """
 
 import time
 import socket
 import threading
 
-PORT = 6556 # a random port
-IP_ADDRESS = "127.0.0.1" # local host for testing
+# local host for testing
+PORT = 6556
+IP_ADDRESS = "127.0.0.1"
 
 class Connection:
     """
@@ -36,6 +34,8 @@ class Connection:
         Loops the connection on a thread.
         """
         while self.running:
+            # This prevents connection problems to one client from crashing
+            # the whole server side program.
             try:
                 request = self.socket.recv(1024)
                 request = request.decode("utf-8")
@@ -90,11 +90,8 @@ class ConnectionManager:
         Loops waiting for connections to add them to the connections list.
         """
         while self.running:
-            print(f"Server listening... Number of connections: {len(self.connections)}")
             self.server.listen(0)
-
             client_socket, client_address = self.server.accept()
-            print(f"Added a new connection to: {client_address[0]}:{client_address[1]}")
             self.connections.append(Connection(client_socket, client_address))
 
     def get_num_of_connection(self) -> int:
@@ -133,18 +130,11 @@ class ConnectionManager:
 
             del self.connections[i]
 
-        # Break out of the loop
+    def end_server(self):
+        """
+        Stops the server from listening for more clients.
+        """
         fake_connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         fake_connection.connect((IP_ADDRESS, PORT))
         fake_connection.send("close".encode("UTF-8"))
         fake_connection.close()
-
-
-# Check if this file is being run
-if __name__ == "__main__":
-    my_server = ConnectionManager()
-    while True:
-        for item in my_server.connections:
-            if item.disconnected is True:
-                del my_server.connections[my_server.connections.index(item)]
-                print(f"Removed: {item.address[0]}:{item.address[1]}")
