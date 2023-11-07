@@ -118,7 +118,8 @@ class ServerManager:
         if len(self.sql_commands) > 0:
             sql_command = self.sql_commands.pop(0)
             output = self.database_manager.send_command(sql_command[1])
-            self.sql_results.append([sql_command[0], self.parse_database_output(output)])
+            self.sql_results.append(
+                [sql_command[0], f"{sql_command[1]}\n{self.parse_database_output(output)}"])
 
         # Check if there is an admin command to run
         if len(self.admin_commands) > 0:
@@ -126,8 +127,8 @@ class ServerManager:
             # TODO does not do anything yet
             self.admin_commands.append(admin_command)
 
+        # Send the data to the client once it has been processed
         if self.sql_results:
-            print(self.sql_results)
             for result in self.sql_results:
                 for connection in self.connection_manager.connections:
                     if connection.address == result[0]:
