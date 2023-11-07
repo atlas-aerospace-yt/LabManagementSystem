@@ -68,7 +68,7 @@ class UserInterface(qtw.QMainWindow):
         # Add new results to the messages
         results = self.server.dequeue_admin_sql()
         results += self.server.dequeue_command()
-        for result in results.split("\n"):
+        for result in reversed(results.split("\n")):
             if result:
                 self.message_attributes.insert(1, result)
 
@@ -115,14 +115,14 @@ class UserInterface(qtw.QMainWindow):
 
         if not valid:
             self.message_attributes.insert(1, "Invalid input: " + command)
-        else:
-            self.message_attributes.insert(1, command)
+
         self.ui.command.setText("")
 
     def end(self):
         """
         Ends all connections to the database and to the client devices
-        TODO
         """
         self.server.database_manager.end_connection()
+
+        self.server.connection_manager.end_server()
         self.server.connection_manager.end_connections()
