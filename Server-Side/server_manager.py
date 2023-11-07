@@ -10,11 +10,6 @@ class ServerManager:
     The server manager class handles all of the admin inputs
     into the application and connects the connection manager
     to the database manager.
-
-    TODO Add SQL commands to database manager
-
-    TODO comment attributes
-    TODO comment methods
     """
 
     def __init__(self):
@@ -43,15 +38,11 @@ class ServerManager:
         Returns:
             str: The SQL result formatted with HTML
         """
-
-        # Check that there is data to be returned
         if len(self.sql_results) > 0:
             for result in self.sql_results:
                 if result[0] == "admin":
                     del self.sql_results[self.sql_results.index(result)]
                     return result[1]
-
-        # Return an empty string if there is nothing to deque
         return ""
 
     def enqueue_command(self, command:str):
@@ -86,46 +77,57 @@ class ServerManager:
             str: the output from the SQL query with \n breaks
         """
         result = ""
-
         for item in output:
             if item is not None:
                 result += str(item) + "\n"
-
         if not result:
             result = "No data returned!"
-
         return result
 
-    def main_loop(self):
+    def get_all_sql_commands(self):
         """
-        This function gets called every frame
+        Gets all the sql commands which have been sent from clients to be run by
+        the server.
         """
-
-        self.connection_manager.delete_connections()
-
-        # Add connection managers SQL commands
         sql_commands = self.connection_manager.get_all_new_data()
         if sql_commands:
             for command in sql_commands:
                 self.enqueue_sql(command)
 
-        # Check if there is an SQL command to run
+    def run_sql_commands(self):
+        """
+        Checks if there are SQL commands then gets the first one and runs it and
+        adds the response to the results queue.
+        """
         if len(self.sql_commands) > 0:
             sql_command = self.sql_commands.pop(0)
             output = self.database_manager.send_command(sql_command[1])
             self.sql_results.append(
                 [sql_command[0], f"{sql_command[1]}\n{self.parse_database_output(output)}"])
 
-        # Check if there is an admin command to run
-        if len(self.admin_commands) > 0:
-            admin_command = self.admin_commands.pop(0)
-            # TODO does not do anything yet
-            self.admin_commands.append(admin_command)
-
-        # Send the data to the client once it has been processed
+    def respond_to_clients(self):
+        """
+        Sends the responses from the SQL commands to the clients.
+        """
         if self.sql_results:
             for result in self.sql_results:
                 connection_index = self.connection_manager.get_connection_index(result[0])
                 if connection_index != -1:
                     self.connection_manager.connections[connection_index].send_data(result[1])
-                del self.sql_results[self.sql_results.index(result)]
+                if result[0] != "admin":
+                    del self.sql_results[self.sql_results.index(result)]
+
+    def main_loop(self):
+        """
+        This function gets called every frame
+        """
+        self.connection_manager.delete_connections()
+        self.get_all_sql_commands()
+        self.run_sql_commands()
+        self.respond_to_clients()
+
+        # Check if there is an admin command to run
+        #if len(self.admin_commands) > 0:
+        #    admin_command = self.admin_commands.pop(0)
+        #    # TODO does not do anything yet
+        #    self.admin_commands.append(admin_command)
