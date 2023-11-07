@@ -101,12 +101,7 @@ class ServerManager:
         This function gets called every frame
         """
 
-        # Remove all disconnected users
-        for item in self.connection_manager.connections:
-            if item.disconnected is True:
-                del self.connection_manager.connections[
-                    self.connection_manager.connections.index(item)]
-                print(f"Removed: {item.address[0]}:{item.address[1]}")
+        self.connection_manager.delete_connections()
 
         # Add connection managers SQL commands
         sql_commands = self.connection_manager.get_all_new_data()
@@ -130,8 +125,7 @@ class ServerManager:
         # Send the data to the client once it has been processed
         if self.sql_results:
             for result in self.sql_results:
-                for connection in self.connection_manager.connections:
-                    if connection.address == result[0]:
-                        connection.send_data(result[1])
-                        del self.sql_results[self.sql_results.index(result)]
-                        break
+                connection_index = self.connection_manager.get_connection_index(result[0])
+                if connection_index != -1:
+                    self.connection_manager.connections[connection_index].send_data(result[1])
+                del self.sql_results[self.sql_results.index(result)]

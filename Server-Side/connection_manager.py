@@ -118,6 +118,30 @@ class ConnectionManager:
 
         return commands
 
+    def get_connection_index(self, address:tuple) -> int:
+        """
+        Gets the index of a specific client that is connected.
+
+        Args:
+            address (tuple): the ip address and port
+
+        Returns:
+            int: the index of the connection in self.connections (-1 if doesnt exist)
+        """
+        for connection in self.connections:
+            if connection.address == address:
+                return self.connections.index(connection)
+        return -1
+
+    def delete_connections(self):
+        """
+        Removes all of the clients who have disconnected from the list.
+        """
+        for connection in self.connections:
+            if connection.disconnected is True:
+                del self.connections[
+                    self.connections.index(connection)]
+
     def end_connections(self):
         """
         Deletes all connections to the clients.
