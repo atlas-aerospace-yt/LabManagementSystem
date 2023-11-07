@@ -46,9 +46,7 @@ class Connection:
                 self.socket.send("closed".encode("utf-8"))
                 break
 
-            print(f"Received: {request}")
-            response = "accepted".encode("utf-8")
-            self.socket.send(response)
+            self.data.append([self.address, request])
             time.sleep(2)
 
         self.disconnected = True
@@ -119,6 +117,9 @@ class ConnectionManager:
         for connection in self.connections:
             for command in connection.data:
                 commands.append(command)
+                del connection.data[connection.data.index(command)]
+
+        return commands
 
     def end_connections(self):
         """

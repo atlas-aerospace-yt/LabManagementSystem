@@ -103,7 +103,7 @@ class UserInterface(qtw.QMainWindow):
             valid = True
         elif command[:3].lower() == "sql":
             # SQL is special as it joins a different queue.
-            self.server.enqueue_sql(command[4:])
+            self.server.enqueue_sql(["admin", command[4:]])
             valid = True
         else:
             # Check for other commands.

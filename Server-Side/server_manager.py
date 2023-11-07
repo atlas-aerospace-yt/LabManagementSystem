@@ -27,14 +27,14 @@ class ServerManager:
         self.connection_manager = ConnectionManager()
         self.database_manager = DatabaseManager()
 
-    def enqueue_sql(self, command:str):
+    def enqueue_sql(self, command:list):
         """
         Enque an SQL command which is to be run.
         
         Args:
-            command(str): the SQL command
+            command(list): the admin or ip address, the SQL command
         """
-        self.sql_commands.append(["admin", command])
+        self.sql_commands.append(command)
 
     def dequeue_admin_sql(self) -> str:
         """
@@ -91,6 +91,9 @@ class ServerManager:
             if item is not None:
                 result += str(item) + "\n"
 
+        if not result:
+            result = "No data returned!"
+
         return result
 
     def main_loop(self):
@@ -105,6 +108,12 @@ class ServerManager:
                     self.connection_manager.connections.index(item)]
                 print(f"Removed: {item.address[0]}:{item.address[1]}")
 
+        # Add connection managers SQL commands
+        sql_commands = self.connection_manager.get_all_new_data()
+        if sql_commands:
+            for command in sql_commands:
+                self.enqueue_sql(command)
+
         # Check if there is an SQL command to run
         if len(self.sql_commands) > 0:
             sql_command = self.sql_commands.pop(0)
@@ -116,4 +125,12 @@ class ServerManager:
             admin_command = self.admin_commands.pop(0)
             # TODO does not do anything yet
             self.admin_commands.append(admin_command)
-            
+
+        if self.sql_results:
+            print(self.sql_results)
+            for result in self.sql_results:
+                for connection in self.connection_manager.connections:
+                    if connection.address == result[0]:
+                        connection.send_data(result[1])
+                        del self.sql_results[self.sql_results.index(result)]
+                        break
