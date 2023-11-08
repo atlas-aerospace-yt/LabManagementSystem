@@ -65,14 +65,14 @@ if __name__ == "__main__":
 
     my_database = DatabaseManager()
 
-    for command in test.FILL_USERS:
-        print(my_database.send_command(command))
-    for command in test.FILL_LABS:
-        print(my_database.send_command(command))
-    for command in test.FILL_SUPPLIER:
-        print(my_database.send_command(command))
-    for command in test.FILL_STOCK:
-        print(my_database.send_command(command))
+    for query in test.FILL_USERS:
+        print(my_database.send_command(query))
+    for query in test.FILL_LABS:
+        print(my_database.send_command(query))
+    for query in test.FILL_SUPPLIER:
+        print(my_database.send_command(query))
+    for query in test.FILL_STOCK:
+        print(my_database.send_command(query))
 
     print(my_database.send_command("SELECT * FROM USERS"))
     print(my_database.send_command("SELECT * FROM LABS"))
