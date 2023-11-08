@@ -55,3 +55,28 @@ class DatabaseManager:
         self.cursor.close()
         self.connection.commit()
         self.connection.close()
+
+if __name__ == "__main__":
+
+    # Fill in the database with test data
+    import Definitions.testing_definitions as test
+
+    print("Filling in the tables.")
+
+    my_database = DatabaseManager()
+
+    for command in test.FILL_USERS:
+        print(my_database.send_command(command))
+    for command in test.FILL_LABS:
+        print(my_database.send_command(command))
+    for command in test.FILL_SUPPLIER:
+        print(my_database.send_command(command))
+    for command in test.FILL_STOCK:
+        print(my_database.send_command(command))
+
+    print(my_database.send_command("SELECT * FROM USERS"))
+    print(my_database.send_command("SELECT * FROM LABS"))
+    print(my_database.send_command("SELECT * FROM SUPPLIER"))
+    print(my_database.send_command("SELECT * FROM STOCK"))
+
+    my_database.end_connection()
