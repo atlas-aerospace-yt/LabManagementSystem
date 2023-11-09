@@ -31,9 +31,23 @@ class ServerManager:
         """
         self.sql_commands.append(command)
 
+    def dequeue_sql(self) -> list:
+        """
+        Deques the SQL commands which are not admin commands.
+
+        Returns:
+            list: The SQL result with connection information
+        """
+        if len(self.sql_results) > 0:
+            for result in self.sql_results:
+                if result[0] != "admin":
+                    del self.sql_results[self.sql_results.index(result)]
+                    return result
+        return ""
+
     def dequeue_admin_sql(self) -> str:
         """
-        Deques the SQL formatted result.
+        Deques the SQL commands from the admin terminal formatted result.
 
         Returns:
             str: The SQL result formatted with HTML
@@ -109,13 +123,11 @@ class ServerManager:
         """
         Sends the responses from the SQL commands to the clients.
         """
-        if self.sql_results:
-            for result in self.sql_results:
-                connection_index = self.connection_manager.get_connection_index(result[0])
-                if connection_index != -1:
-                    self.connection_manager.connections[connection_index].send_data(result[1])
-                if result[0] != "admin":
-                    del self.sql_results[self.sql_results.index(result)]
+        response = self.dequeue_sql()
+        while response:
+            if response[0] != -1:
+                self.connection_manager.connections[response[0]].send_data(response[1])
+            response = self.dequeue_sql()
 
     def main_loop(self):
         """
@@ -125,9 +137,3 @@ class ServerManager:
         self.get_all_sql_commands()
         self.run_sql_commands()
         self.respond_to_clients()
-
-        # Check if there is an admin command to run
-        #if len(self.admin_commands) > 0:
-        #    admin_command = self.admin_commands.pop(0)
-        #    # TODO does not do anything yet
-        #    self.admin_commands.append(admin_command)
