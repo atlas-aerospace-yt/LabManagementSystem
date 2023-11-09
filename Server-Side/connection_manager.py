@@ -151,7 +151,6 @@ class ConnectionManager:
         for i, connection in enumerate(self.connections):
             connection.running = False
             connection.disconnect()
-
             del self.connections[i]
 
     def end_server(self):

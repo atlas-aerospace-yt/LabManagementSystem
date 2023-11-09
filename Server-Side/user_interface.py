@@ -8,7 +8,7 @@ from PyQt5 import QtWidgets as qtw
 from server_manager import ServerManager
 from Ui.server_side import Ui_MainWindow as terminal
 
-# Constant definitions
+# Constant definitions TODO -> tidy up definition
 MSG_INSTRUCTIONS = """<h1><p style=\"color:#fc7303\">Terminal</p></h1>
 <p style=\"color:#000000\">The options for the admin terminal are:<br>
 \"exit\" - ends the server side program<br>
@@ -33,14 +33,13 @@ class UserInterface(qtw.QMainWindow):
         super().__init__()
 
         self.ui = terminal()
-        self.ui.setupUi(self)
         self.server = ServerManager()
 
         self.message_attributes = [MSG_INSTRUCTIONS]
-
-        self.connect_buttons()
-
         self.prev_num_of_messages = 0
+
+        self.ui.setupUi(self)
+        self.connect_buttons()
 
         timer = qtc.QTimer(self)
         timer.setInterval(25)
@@ -51,12 +50,12 @@ class UserInterface(qtw.QMainWindow):
         """
         Connects the enter key to the loop 
         """
-
         self.ui.command.returnPressed.connect(self.add_command)
 
     def loop(self):
         """
         Calls the main loop every 25ms.
+        TODO -> Tidy up this function
         """
         # Loop the backend main loop
         self.server.main_loop()
@@ -80,19 +79,15 @@ class UserInterface(qtw.QMainWindow):
         """
         Update the html being displayed.
         """
-
-        html = ""
-        for i, message in enumerate(self.message_attributes):
-            if i != 0:
-                html += MSG_BEGINNING + message + MSG_ENDING
-            else:
-                html += message
-
+        html = self.message_attributes[0]
+        for message in self.message_attributes[1:]:
+            html += MSG_BEGINNING + message + MSG_ENDING
         self.ui.terminal.setHtml(html)
 
     def add_command(self):
         """
         Queues and parses the commands into the different types.
+        TODO -> Tidy up this function
         """
         command = self.ui.command.text()
 
@@ -123,6 +118,5 @@ class UserInterface(qtw.QMainWindow):
         Ends all connections to the database and to the client devices
         """
         self.server.database_manager.end_connection()
-
         self.server.connection_manager.end_server()
         self.server.connection_manager.end_connections()
