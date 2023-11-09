@@ -126,6 +126,7 @@ class ServerManager:
         response = self.dequeue_sql()
         while response:
             if response[0] != -1:
+                print(response)
                 self.connection_manager.connections[response[0]].send_data(response[1])
             response = self.dequeue_sql()
 
