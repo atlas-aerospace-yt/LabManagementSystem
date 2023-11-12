@@ -25,7 +25,7 @@ class DatabaseManager:
         self.cursor.execute(sql.CREATE_BOOKINGS_TABLE)
         self.cursor.execute(sql.CREATE_BOOKED_STOCK_TABLE)
 
-    def send_command(self, command:str)-> str:
+    def send_command(self, command:str)-> list:
         """
         This relays the SQL command to the database. The try except is needed incase
         the admins enter any incorrect commands.
