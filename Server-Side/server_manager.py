@@ -13,8 +13,7 @@ class ServerManager:
     """
 
     def __init__(self):
-        self.sql_commands = [] # a 2D list
-
+        self.sql_commands = []
         self.sql_results = []
 
         self.connection_manager = ConnectionManager()
@@ -105,7 +104,6 @@ class ServerManager:
         while response:
             if response[0] != -1:
                 connection_index = self.connection_manager.get_connection_index(response[0])
-                print(connection_index)
                 self.connection_manager.connections[connection_index].send_data(response[1])
             response = self.dequeue_sql()
 
