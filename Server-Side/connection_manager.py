@@ -94,7 +94,7 @@ class ConnectionManager:
             client_socket, client_address = self.server.accept()
             self.connections.append(Connection(client_socket, client_address))
 
-    def get_num_of_connection(self) -> int:
+    def get_num_of_connections(self) -> int:
         """
         Gets the number of connections to the server.
 

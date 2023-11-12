@@ -61,12 +61,12 @@ class UserInterface(qtw.QMainWindow):
         self.server.main_loop()
 
         # Update the number of connections displayed on the screen
-        connections = self.server.connection_manager.get_num_of_connection()
+        connections = self.server.connection_manager.get_num_of_connections()
         self.ui.num_of_connections.setText(f"Connections: {connections}")
 
         # Add new results to the messages
         results = self.server.dequeue_admin_sql()
-        results += self.server.dequeue_command()
+
         for result in reversed(results.split("\n")):
             if result:
                 self.message_attributes.insert(1, result)
@@ -100,13 +100,13 @@ class UserInterface(qtw.QMainWindow):
             # SQL is special as it joins a different queue.
             self.server.enqueue_sql(["admin", command[4:]])
             valid = True
-        else:
-            # Check for other commands.
-            for key_word in COMMAND_KEY_WORDS:
-                #print(command[:len(key_word)].lower(), key_word.lower())
-                if command[:len(key_word)].lower() == key_word.lower():
-                    self.server.enqueue_command(command[len(key_word)+1:])
-                    valid = True
+        #else:
+        #    # Check for other commands.
+        #    for key_word in COMMAND_KEY_WORDS:
+        #        #print(command[:len(key_word)].lower(), key_word.lower())
+        #        if command[:len(key_word)].lower() == key_word.lower():
+        #            self.server.enqueue_command(command[len(key_word)+1:])
+        #            valid = True
 
         if not valid:
             self.message_attributes.insert(1, "Invalid input: " + command)

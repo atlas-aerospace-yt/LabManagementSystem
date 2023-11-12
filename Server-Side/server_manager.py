@@ -13,11 +13,9 @@ class ServerManager:
     """
 
     def __init__(self):
-        self.admin_commands = [] # a 1D list
         self.sql_commands = [] # a 2D list
 
         self.sql_results = []
-        self.admin_commands = []
 
         self.connection_manager = ConnectionManager()
         self.database_manager = DatabaseManager()
@@ -57,26 +55,6 @@ class ServerManager:
                 if result[0] == "admin":
                     del self.sql_results[self.sql_results.index(result)]
                     return result[1]
-        return ""
-
-    def enqueue_command(self, command:str):
-        """
-        Enque an admin terminal command.
-
-        Args:
-            command (str): the command to be run
-        """
-        self.admin_commands.append(command)
-
-    def dequeue_command(self) -> str:
-        """
-        Dequeu
-
-        Returns:
-            str: _description_
-        """
-        if len(self.admin_commands) > 0:
-            return self.admin_commands.pop(0)
         return ""
 
     def parse_database_output(self, output:list) -> str:
@@ -126,8 +104,9 @@ class ServerManager:
         response = self.dequeue_sql()
         while response:
             if response[0] != -1:
-                print(response)
-                self.connection_manager.connections[response[0]].send_data(response[1])
+                connection_index = self.connection_manager.get_connection_index(response[0])
+                print(connection_index)
+                self.connection_manager.connections[connection_index].send_data(response[1])
             response = self.dequeue_sql()
 
     def main_loop(self):
