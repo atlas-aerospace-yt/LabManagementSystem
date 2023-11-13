@@ -5,21 +5,9 @@ This file contains the UserInterface class.
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtWidgets as qtw
 
+import Definitions.gui_definitions as gui
 from server_manager import ServerManager
 from Ui.server_side import Ui_MainWindow as terminal
-
-# Constant definitions TODO -> tidy up definition
-MSG_INSTRUCTIONS = """<h1><p style=\"color:#fc7303\">Terminal</p></h1>
-<p style=\"color:#000000\">The options for the admin terminal are:<br>
-\"exit\" - ends the server side program<br>
-\"SQL\"(command) - run an SQL command on the servers<br>
-\"info\" - to get information about the activity<br>
-\"disconnect\" - (all or ip) - disconects a specific user or all.<br></p>"""
-
-MSG_BEGINNING = "<p style=\"color:#fc7303\">>>> <font color=\"#000000\">"
-MSG_ENDING = "</P>"
-
-COMMAND_KEY_WORDS = ["info", "disconnect"]
 
 class UserInterface(qtw.QMainWindow):
     """
@@ -35,8 +23,10 @@ class UserInterface(qtw.QMainWindow):
         self.ui = terminal()
         self.server = ServerManager()
 
-        self.message_attributes = [MSG_INSTRUCTIONS]
+        self.message_attributes = [gui.MSG_INSTRUCTIONS]
         self.prev_num_of_messages = 0
+
+        self.logged_in = False
 
         self.ui.setupUi(self)
         self.connect_buttons()
@@ -81,7 +71,7 @@ class UserInterface(qtw.QMainWindow):
         """
         html = self.message_attributes[0]
         for message in self.message_attributes[1:]:
-            html += MSG_BEGINNING + message + MSG_ENDING
+            html += gui.MSG_BEGINNING + message + gui.MSG_ENDING
         self.ui.terminal.setHtml(html)
 
     def add_command(self):
@@ -90,6 +80,9 @@ class UserInterface(qtw.QMainWindow):
         TODO -> Tidy up this function
         """
         command = self.ui.command.text()
+
+        if not self.logged_in:
+            self.verify_login()
 
         valid = False
 
@@ -112,6 +105,15 @@ class UserInterface(qtw.QMainWindow):
             self.message_attributes.insert(1, "Invalid input: " + command)
 
         self.ui.command.setText("")
+
+    def verify_login(self, password:str):
+        """
+        Checks the login against what is stored in the INSTITUTION database.
+
+        Args:
+            password(str): the password that the user has entered.
+        """
+
 
     def end(self):
         """
