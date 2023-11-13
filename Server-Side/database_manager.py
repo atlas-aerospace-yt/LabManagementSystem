@@ -25,6 +25,9 @@ class DatabaseManager:
         self.cursor.execute(sql.CREATE_BOOKINGS_TABLE)
         self.cursor.execute(sql.CREATE_BOOKED_STOCK_TABLE)
 
+        # The only unlinked table
+        self.cursor.execute(sql.CREATE_INSTITUTION_TABLE)
+
     def send_command(self, command:str)-> list:
         """
         This relays the SQL command to the database. The try except is needed incase
@@ -37,7 +40,6 @@ class DatabaseManager:
             str: the result from the sql command.
         """
         try:
-            print("Running command: " + command)
             self.cursor.execute(command)
             output = self.cursor.fetchall()
             self.connection.commit()
@@ -45,6 +47,16 @@ class DatabaseManager:
             output = [str(error)]
 
         return output
+
+    def hash(self, message:str):
+        """
+        Create a hash value of length 128.
+
+        Args:
+
+        Returns:
+        """
+        return
 
     def end_connection(self):
         """
