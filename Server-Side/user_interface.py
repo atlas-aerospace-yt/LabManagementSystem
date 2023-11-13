@@ -2,6 +2,8 @@
 This file contains the UserInterface class.    
 """
 
+import hashlib
+
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtWidgets as qtw
 
@@ -23,7 +25,7 @@ class UserInterface(qtw.QMainWindow):
         self.ui = terminal()
         self.server = ServerManager()
 
-        self.message_attributes = [gui.MSG_INSTRUCTIONS]
+        self.message_attributes = [gui.MSG_LOGIN]
         self.prev_num_of_messages = 0
 
         self.logged_in = False
@@ -61,7 +63,7 @@ class UserInterface(qtw.QMainWindow):
             if result:
                 self.message_attributes.insert(1, result)
 
-        if len(self.message_attributes) > self.prev_num_of_messages:
+        if len(self.message_attributes) != self.prev_num_of_messages:
             self.update_html()
             self.prev_num_of_messages = len(self.message_attributes)
 
@@ -80,9 +82,11 @@ class UserInterface(qtw.QMainWindow):
         TODO -> Tidy up this function
         """
         command = self.ui.command.text()
+        self.ui.command.setText("")
 
         if not self.logged_in:
-            self.verify_login()
+            self.verify_login(command)
+            return
 
         valid = False
 
@@ -104,16 +108,24 @@ class UserInterface(qtw.QMainWindow):
         if not valid:
             self.message_attributes.insert(1, "Invalid input: " + command)
 
-        self.ui.command.setText("")
 
     def verify_login(self, password:str):
         """
-        Checks the login against what is stored in the INSTITUTION database.
+        Checks the login against what is stored in the INSTITUTION database using
+        an md5 hash.
 
         Args:
             password(str): the password that the user has entered.
         """
+        input_password = hashlib.md5(password.encode("UTF-8")).hexdigest()
+        actual_password = self.server.database_manager.send_command(gui.GET_PWD_HASH)[0][0]
 
+        if input_password == actual_password:
+            self.message_attributes = [gui.MSG_INSTRUCTIONS]
+            self.prev_num_of_messages = -1
+            self.logged_in = True
+        else:
+            self.message_attributes.append(f"Invalid password:\n{password}")
 
     def end(self):
         """

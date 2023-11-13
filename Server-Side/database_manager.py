@@ -27,6 +27,10 @@ class DatabaseManager:
 
         # The only unlinked table
         self.cursor.execute(sql.CREATE_INSTITUTION_TABLE)
+        try:
+            self.cursor.execute(sql.INSERT_DEFAULT_PASSWORD)
+        except sqlite3.IntegrityError:
+            pass
 
     def send_command(self, command:str)-> list:
         """
@@ -47,16 +51,6 @@ class DatabaseManager:
             output = [str(error)]
 
         return output
-
-    def hash(self, message:str):
-        """
-        Create a hash value of length 128.
-
-        Args:
-
-        Returns:
-        """
-        return
 
     def end_connection(self):
         """
@@ -100,5 +94,6 @@ if __name__ == "__main__":
     print(my_database.send_command("SELECT * FROM STOCK"))
     print(my_database.send_command("SELECT * FROM BOOKINGS"))
     print(my_database.send_command("SELECT * FROM BOOKED_STOCK"))
+    print(my_database.send_command("SELECT * FROM INSTITUTION"))
 
     my_database.end_connection()
