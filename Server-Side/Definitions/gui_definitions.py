@@ -9,13 +9,15 @@ MSG_LOGIN = """<h1><p style=\"color:#fc7303\">Terminal</p></h1>
 
 GET_PWD_HASH = """SELECT PasswordHash FROM INSTITUTION"""
 
-MSG_INSTRUCTIONS = """<h1><p style=\"color:#fc7303\">Terminal</p></h1>
-<p style=\"color:#000000\">The options for the admin terminal are:<br>
-\"exit\" - ends the server side program<br>
-\"SQL\"(command) - run an SQL command on the servers<br>
+MSG_INSTRUCTIONS = """<h1><p style=\"color:#fc7303\">Terminal</p></h1><p style=\"color:#000000\">
+The options for the admin terminal are:<br>
+\"disconnect\" [-a] - disconect all users e.g. \"disconnect-a\"<br>
+\"disconnect\" [-ip-port] - disconnect a specific user e.g. \"disconnect-127.0.0.1-5555\"<br>
+\"SQL\" [-sql] - run an SQL command on the server e.g. \"SQL-SELECT * FROM MY_TABLE\"<br>
+\"reset\" [-password] - change the administrator password e.g. \"reset-12345\"<br>
 \"info\" - to get information about the activity<br>
-\"disconnect\" - (all or ip) - disconects a specific user or all.<br>
-\"reset\"(password) - change the administrator password</p>"""
+\"logout\" - log out of the admin terminal<br>
+\"exit\" - ends the server side program</p>"""
 
 MSG_BEGINNING = "<p style=\"color:#fc7303\">>>> <font color=\"#000000\">"
 MSG_ENDING = "</P>"

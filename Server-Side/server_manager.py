@@ -127,3 +127,25 @@ class ServerManager:
         self.database_manager.send_command("DELETE FROM INSTITUTION")
         self.database_manager.send_command(
             f"INSERT INTO INSTITUTION VALUES(\"{new_password_hash}\")")
+
+    def get_information(self) -> str:
+        """
+        Get information about the current number of connections, the IP address and port of
+        the connections and any queued commands from the connections.
+        """
+        result = ""
+        sql_list = self.get_all_sql_commands()
+
+        # Get all of the SQL commands waiting to be run
+        if sql_list:
+            result += "The SQL commands waiting to be run are:\n"
+            for sql_command in sql_list:
+                result += f"    {sql_command}\n"
+
+        result += f"There are {self.connection_manager.get_num_of_connections()} connection(s)."
+
+        result += "The addresses of the connections are:\n"
+        for connection in self.connection_manager.connections:
+            result += f"    {connection.address}\n"
+
+        return result

@@ -108,6 +108,9 @@ class UserInterface(qtw.QMainWindow):
             self.logged_in = False
             self.message_attributes = [gui.MSG_LOGIN]
 
+        elif command[:4].lower() == "info":
+            self.message_attributes.append(self.server.get_information())
+
         else:
             self.message_attributes.insert(1, "Invalid input: " + command)
 
@@ -128,7 +131,7 @@ class UserInterface(qtw.QMainWindow):
             self.prev_num_of_messages = -1
             self.logged_in = True
         else:
-            self.message_attributes.append(f"Invalid password:\n{password}")
+            self.message_attributes.append(f"Invalid password!")
 
     def end(self):
         """
