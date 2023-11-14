@@ -2,6 +2,8 @@
 This file contains the ServerManager class.
 """
 
+import hashlib
+
 from database_manager import DatabaseManager
 from connection_manager import ConnectionManager
 
@@ -115,3 +117,13 @@ class ServerManager:
         self.get_all_sql_commands()
         self.run_sql_commands()
         self.respond_to_clients()
+
+    def change_password(self, new_password):
+        """
+        Update the administrator password by hashing the new password, deleting
+        the old password and inserting the new password hash.
+        """
+        new_password_hash =  hashlib.md5(new_password.encode("UTF-8")).hexdigest()
+        self.database_manager.send_command("DELETE FROM INSTITUTION")
+        self.database_manager.send_command(
+            f"INSERT INTO INSTITUTION VALUES(\"{new_password_hash}\")")

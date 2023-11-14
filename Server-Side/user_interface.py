@@ -67,6 +67,13 @@ class UserInterface(qtw.QMainWindow):
             self.update_html()
             self.prev_num_of_messages = len(self.message_attributes)
 
+        # Syntax from:
+        # https://stackoverflow.com/questions/23634843/password-form-in-pyqt
+        if not self.logged_in:
+            self.ui.command.setEchoMode(qtw.QLineEdit.Password)
+        else:
+            self.ui.command.setEchoMode(qtw.QLineEdit.Normal)
+
     def update_html(self):
         """
         Update the html being displayed.
@@ -88,24 +95,20 @@ class UserInterface(qtw.QMainWindow):
             self.verify_login(command)
             return
 
-        valid = False
-
-        if command.lower() == "exit":
+        elif command.lower() == "exit":
             qtw.QCoreApplication.instance().quit()
-            valid = True
-        elif command[:3].lower() == "sql":
-            # SQL is special as it joins a different queue.
-            self.server.enqueue_sql(["admin", command[4:]])
-            valid = True
-        #else:
-        #    # Check for other commands.
-        #    for key_word in COMMAND_KEY_WORDS:
-        #        #print(command[:len(key_word)].lower(), key_word.lower())
-        #        if command[:len(key_word)].lower() == key_word.lower():
-        #            self.server.enqueue_command(command[len(key_word)+1:])
-        #            valid = True
 
-        if not valid:
+        elif command[:3].lower() == "sql":
+            self.server.enqueue_sql(["admin", command[4:]])
+
+        elif command[:5].lower() == "reset":
+            self.server.change_password(command[6:])
+
+        elif command[:6].lower() == "logout":
+            self.logged_in = False
+            self.message_attributes = [gui.MSG_LOGIN]
+
+        else:
             self.message_attributes.insert(1, "Invalid input: " + command)
 
 
@@ -121,7 +124,7 @@ class UserInterface(qtw.QMainWindow):
         actual_password = self.server.database_manager.send_command(gui.GET_PWD_HASH)[0][0]
 
         if input_password == actual_password:
-            self.message_attributes = [gui.MSG_INSTRUCTIONS]
+            self.message_attributes = [gui.MSG_INSTRUCTIONS, "Logged in!"]
             self.prev_num_of_messages = -1
             self.logged_in = True
         else:
@@ -129,7 +132,7 @@ class UserInterface(qtw.QMainWindow):
 
     def end(self):
         """
-        Ends all connections to the database and to the client devices
+        Ends all connections to the database and to the client devices.
         """
         self.server.database_manager.end_connection()
         self.server.connection_manager.end_server()

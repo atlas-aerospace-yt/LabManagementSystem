@@ -27,10 +27,9 @@ class DatabaseManager:
 
         # The only unlinked table
         self.cursor.execute(sql.CREATE_INSTITUTION_TABLE)
-        try:
+        if not self.send_command("SELECT * FROM INSTITUTION"):
+            print("triggered")
             self.cursor.execute(sql.INSERT_DEFAULT_PASSWORD)
-        except sqlite3.IntegrityError:
-            pass
 
     def send_command(self, command:str)-> list:
         """

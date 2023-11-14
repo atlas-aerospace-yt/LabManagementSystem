@@ -14,7 +14,8 @@ MSG_INSTRUCTIONS = """<h1><p style=\"color:#fc7303\">Terminal</p></h1>
 \"exit\" - ends the server side program<br>
 \"SQL\"(command) - run an SQL command on the servers<br>
 \"info\" - to get information about the activity<br>
-\"disconnect\" - (all or ip) - disconects a specific user or all.<br></p>"""
+\"disconnect\" - (all or ip) - disconects a specific user or all.<br>
+\"reset\"(password) - change the administrator password</p>"""
 
 MSG_BEGINNING = "<p style=\"color:#fc7303\">>>> <font color=\"#000000\">"
 MSG_ENDING = "</P>"
