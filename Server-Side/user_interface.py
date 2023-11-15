@@ -96,7 +96,7 @@ class UserInterface(qtw.QMainWindow):
             return
 
         elif command.lower() == gui.EXIT:
-            qtw.QCoreApplication.instance().quit()
+            qtw.QApplication.instance().quit()
 
         elif command[:3].lower() == gui.SQL:
             self.server.enqueue_sql(["admin", command[4:]])
