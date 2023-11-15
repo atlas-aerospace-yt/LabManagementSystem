@@ -23,3 +23,13 @@ MSG_BEGINNING = "<p style=\"color:#fc7303\">>>> <font color=\"#000000\">"
 MSG_ENDING = "</P>"
 
 COMMAND_KEY_WORDS = ["info", "disconnect"]
+
+INVALID_PASSWORD = "Invalid password!"
+
+RESET_PASSWORD = "Your new password has been set!"
+
+EXIT = "exit"
+SQL = "sql"
+RESET = "reset"
+LOGOUT = "logout"
+INFO = "info"

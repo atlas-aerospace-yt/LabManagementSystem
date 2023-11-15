@@ -28,7 +28,6 @@ class DatabaseManager:
         # The only unlinked table
         self.cursor.execute(sql.CREATE_INSTITUTION_TABLE)
         if not self.send_command("SELECT * FROM INSTITUTION"):
-            print("triggered")
             self.cursor.execute(sql.INSERT_DEFAULT_PASSWORD)
 
     def send_command(self, command:str)-> list:

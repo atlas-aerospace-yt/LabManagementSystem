@@ -95,20 +95,21 @@ class UserInterface(qtw.QMainWindow):
             self.verify_login(command)
             return
 
-        elif command.lower() == "exit":
+        elif command.lower() == gui.EXIT:
             qtw.QCoreApplication.instance().quit()
 
-        elif command[:3].lower() == "sql":
+        elif command[:3].lower() == gui.SQL:
             self.server.enqueue_sql(["admin", command[4:]])
 
-        elif command[:5].lower() == "reset":
+        elif command[:5].lower() == gui.RESET:
             self.server.change_password(command[6:])
+            self.message_attributes.append(gui.RESET_PASSWORD)
 
-        elif command[:6].lower() == "logout":
+        elif command[:6].lower() == gui.LOGOUT:
             self.logged_in = False
             self.message_attributes = [gui.MSG_LOGIN]
 
-        elif command[:4].lower() == "info":
+        elif command[:4].lower() == gui.INFO:
             self.message_attributes.append(self.server.get_information())
 
         else:
@@ -131,7 +132,7 @@ class UserInterface(qtw.QMainWindow):
             self.prev_num_of_messages = -1
             self.logged_in = True
         else:
-            self.message_attributes.append(f"Invalid password!")
+            self.message_attributes.append(gui.INVALID_PASSWORD)
 
     def end(self):
         """
