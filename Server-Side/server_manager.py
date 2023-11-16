@@ -134,12 +134,11 @@ class ServerManager:
         the connections and any queued commands from the connections.
         """
         result = ""
-        sql_list = self.get_all_sql_commands()
 
         # Get all of the SQL commands waiting to be run
-        if sql_list:
+        if self.sql_commands:
             result += "The SQL commands waiting to be run are:\n"
-            for sql_command in sql_list:
+            for sql_command in self.sql_commands:
                 result += f"    {sql_command}\n"
 
         result += f"There are {self.connection_manager.get_num_of_connections()} connection(s)."
