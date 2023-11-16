@@ -14,8 +14,13 @@ class GraphManager(qtw.QMainWindow):
 
     def __init__(self):
         super().__init__()
-        
+
         self.ui = graph_plotter()
+
+        self.x_co_ordinates = []
+        self.y_co_ordinates = []
+
+        self.connect_buttons()
 
         self.ui.setupUi(self)
 
@@ -24,11 +29,20 @@ class GraphManager(qtw.QMainWindow):
         Connect all of the buttons from the frontend to the rest
         of the code.
         """
-        pass
+        self.ui.add_variable
 
-    def verify_data(self):
+    def append_graph_data(self):
         """
         Verify the graph data that the user has entered into the
         front end.
         """
-        pass
+        x_data = self.ui.x_variable.text()
+        y_data = self.ui.y_variable.text()
+
+        if x_data and y_data:
+            print(x_data)
+            print(y_data)
+            self.ui.x_variable.setText("")
+            self.ui.y_variable.setText("")
+        else:
+            print("Please fix inputs!")
