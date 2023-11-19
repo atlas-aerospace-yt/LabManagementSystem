@@ -15,12 +15,13 @@ class MainUI(qtw.QMainWindow):
     This class handles all user interactions with the main window.
     """
 
-    def __init__(self):
+    def __init__(self, connection_manager):
         super().__init__()
 
         self.ui = main_window()
 
         self.time_table_widgets = []
+        self.connection_manager = connection_manager
 
         self.ui.setupUi(self)
         self.connect_buttons()
@@ -59,7 +60,15 @@ class MainUI(qtw.QMainWindow):
         """
         Fill in the timetable with the correct information.
         """
-        for i in range(gui.NUM_OF_ROWS):
+        times = self.connection_manager.send_command("SELECT * FROM TIMETABLE")
+        for i in range(len(times)):
+            for j in range(1, len(times[i])):
+                time_seconds = times[i][j]
+                time = time_seconds.split(":")[:-1]
+                output = time[0] + ":" + time[1]
+                times[i][j] = output
+
+        for i in range(len(times)+1):
             self.time_table_widgets.append([])
             for j in range(gui.NUM_OF_COLS):
                 if i == 0 and j == 0:
@@ -69,12 +78,13 @@ class MainUI(qtw.QMainWindow):
                     self.add_widget_to_timetable(gui.DAYS_OF_THE_WEEK[j-1], i, j, gui.TITLE_CSS)
                     continue
                 elif j == 0:
-                    self.add_widget_to_timetable(gui.TIME_SLOTS[i-1], i, j, gui.TITLE_CSS)
+                    self.add_widget_to_timetable(
+                        f"{times[i-1][1]}-{times[i-1][2]}", i, j, gui.TITLE_CSS)
                     continue
 
                 self.time_table_widgets[i].append(qtw.QTextBrowser())
                 self.time_table_widgets[i][j].setMinimumHeight(50)
-                self.time_table_widgets[i][j].setText(f"QTextBrowser at:\n{i}, {j}")
+                self.time_table_widgets[i][j].setText(f"QTextBrowser at: \n{i}, {j}")
                 self.ui.time_table.addWidget(self.time_table_widgets[i][j], i, j)
 
     def test(self):
