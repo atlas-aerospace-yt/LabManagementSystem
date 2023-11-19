@@ -21,6 +21,7 @@ class DatabaseManager:
         self.cursor.execute(sql.CREATE_LABS_TABLE)
         self.cursor.execute(sql.CREATE_USERS_TABLE)
         self.cursor.execute(sql.CREATE_SUPPLIER_TABLE)
+        self.cursor.execute(sql.CREATE_TIMETABLE_TABLE)
         self.cursor.execute(sql.CREATE_STOCK_TABLE)
         self.cursor.execute(sql.CREATE_BOOKINGS_TABLE)
         self.cursor.execute(sql.CREATE_BOOKED_STOCK_TABLE)
@@ -75,6 +76,8 @@ if __name__ == "__main__":
     for query in test.FILL_USERS:
         print(my_database.send_command(query))
     for query in test.FILL_LABS:
+        print(my_database.send_command(query))
+    for query in test.FILL_TIMETABLE:
         print(my_database.send_command(query))
     for query in test.FILL_SUPPLIER:
         print(my_database.send_command(query))
