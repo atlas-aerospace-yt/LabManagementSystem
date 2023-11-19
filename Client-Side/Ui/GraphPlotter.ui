@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>602</width>
-    <height>400</height>
+    <width>600</width>
+    <height>370</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>370</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Graph plotter</string>
@@ -63,15 +69,15 @@ QScrollBar
 	width: 20px;
 	border:none;
     border-radius: 10px;
-    background: #ffffff;
+    background: transparent;
 }
 QScrollBar::add-page, QScrollBar::sub-page 
 {
-	background-color: #ffffff;
+	background: transparent;
 }
 QScrollBar::add-line, QScrollBar::sub-line 
 {
-	background-color: #ffffff;
+	background: transparent;
 }
 QScrollBar::handle
 {
@@ -108,40 +114,7 @@ QPushButton::pressed {
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="2" column="0">
      <layout class="QGridLayout" name="gridLayout" columnstretch="1,3">
-      <item row="0" column="0">
-       <widget class="QLineEdit" name="y_variable">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>50</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QPushButton" name="add_variable">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>50</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Add variable</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1" rowspan="6">
-       <widget class="QTextBrowser" name="data">
-        <property name="maximumSize">
-         <size>
-          <width>16777213</width>
-          <height>16777215</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item row="9" column="1">
+      <item row="11" column="1">
        <widget class="QLabel" name="notification">
         <property name="minimumSize">
          <size>
@@ -154,17 +127,7 @@ QPushButton::pressed {
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLineEdit" name="x_variable">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>50</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item row="9" column="0">
+      <item row="11" column="0">
        <widget class="QPushButton" name="plot_graph">
         <property name="minimumSize">
          <size>
@@ -177,7 +140,56 @@ QPushButton::pressed {
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
+      <item row="2" column="0">
+       <widget class="QLineEdit" name="x_variable">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="placeholderText">
+         <string>Enter x co-ordinate</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QPushButton" name="add_variable">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Add variable</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" rowspan="8">
+       <widget class="QTextBrowser" name="data">
+        <property name="maximumSize">
+         <size>
+          <width>16777213</width>
+          <height>16777215</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QPushButton" name="clear_data">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Clear data</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
        <spacer name="verticalSpacer">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -190,16 +202,16 @@ QPushButton::pressed {
         </property>
        </spacer>
       </item>
-      <item row="4" column="0">
-       <widget class="QPushButton" name="clear_data">
+      <item row="3" column="0">
+       <widget class="QLineEdit" name="y_variable">
         <property name="minimumSize">
          <size>
           <width>0</width>
           <height>50</height>
          </size>
         </property>
-        <property name="text">
-         <string>Clear data</string>
+        <property name="placeholderText">
+         <string>Enter y co-ordinate</string>
         </property>
        </widget>
       </item>

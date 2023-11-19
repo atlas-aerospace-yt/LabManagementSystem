@@ -41,6 +41,7 @@ class GraphManager(qtw.QMainWindow):
         """
         self.ui.add_variable.clicked.connect(self.append_graph_data)
         self.ui.plot_graph.clicked.connect(self.create_graph)
+        self.ui.clear_data.clicked.connect(self.clear_data)
 
     def display_messsage(self):
         """
@@ -57,6 +58,14 @@ class GraphManager(qtw.QMainWindow):
         self.ui.data.setHtml(message)
 
         self.status = 0
+
+    def clear_data(self):
+        """
+        Clear all data when the user is done with one graph so that they can add another.
+        """
+        self.x_co_ordinates = []
+        self.y_co_ordinates = []
+        self.status = 1
 
     def verify_data(self, x_co_ordinare:str, y_co_ordinate:str) -> bool:
         """
