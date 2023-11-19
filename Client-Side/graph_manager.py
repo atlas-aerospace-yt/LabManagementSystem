@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtWidgets as qtw
 
-import Definitions.graph_definitions as graph
+import Definitions.gui_definitions as gui
 from Ui.GraphPlotter import Ui_GraphWindow as graph_plotter
 
 class GraphManager(qtw.QMainWindow):
@@ -16,8 +16,8 @@ class GraphManager(qtw.QMainWindow):
     Graph plotting window.
     """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
 
         self.ui = graph_plotter()
 
@@ -28,6 +28,8 @@ class GraphManager(qtw.QMainWindow):
 
         self.ui.setupUi(self)
         self.connect_buttons()
+
+        self.show()
 
         timer = qtc.QTimer(self)
         timer.setInterval(25)
@@ -52,9 +54,9 @@ class GraphManager(qtw.QMainWindow):
         if not self.status:
             return
 
-        message = graph.MSG_TITLE
+        message = gui.MSG_TITLE
         for x_value, y_value in zip(self.x_co_ordinates, self.y_co_ordinates):
-            message += f"{graph.MSG_BEGINNING} {x_value}, {y_value}{graph.MSG_ENDING}"
+            message += f"{gui.MSG_BEGINNING} {x_value}, {y_value}{gui.MSG_ENDING}"
         self.ui.data.setHtml(message)
 
         self.status = 0
