@@ -14,7 +14,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(872, 528)
+        MainWindow.resize(1000, 620)
+        MainWindow.setMinimumSize(QtCore.QSize(1000, 620))
         MainWindow.setStyleSheet("* {\n"
 "    background-color: #ffffff;\n"
 "}\n"
@@ -28,20 +29,60 @@ class Ui_MainWindow(object):
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.gridLayout_5 = QtWidgets.QGridLayout()
         self.gridLayout_5.setObjectName("gridLayout_5")
-        self.gridLayout_6 = QtWidgets.QGridLayout()
+        self.time_table_layout = QtWidgets.QWidget(self.centralwidget)
+        self.time_table_layout.setStyleSheet("*{\n"
+"    background-color: #0388fc;\n"
+"    border: none;\n"
+"    border-radius: 20px;\n"
+"}\n"
+"\n"
+"QTextBrowser {\n"
+"    background-color: #ffffff;\n"
+"    color:    #000000;\n"
+"    border:none;\n"
+"    border-radius:10px;\n"
+"}\n"
+"\n"
+"/* Scroll bar */\n"
+"QScrollBar\n"
+"{\n"
+"    width:10px;\n"
+"    border: none;\n"
+"    background: #0388fc;\n"
+"}\n"
+"QScrollBar::add-page, QScrollBar::sub-page \n"
+"{\n"
+"    background: #0388fc;\n"
+"}\n"
+"QScrollBar::add-line, QScrollBar::sub-line \n"
+"{\n"
+"    background: #0388fc;\n"
+"}\n"
+"QScrollBar::handle\n"
+"{\n"
+"    background-color: #fc7303;\n"
+"    min-height: 30px;\n"
+"    border-radius: 5px;\n"
+"    border:none;\n"
+"}\n"
+"QScrollBar::up-arrow\n"
+"{\n"
+"    background: none;\n"
+"}\n"
+"QScrollBar::down-arrow\n"
+"{\n"
+"    background: none;\n"
+"}")
+        self.time_table_layout.setObjectName("time_table_layout")
+        self.gridLayout_6 = QtWidgets.QGridLayout(self.time_table_layout)
         self.gridLayout_6.setContentsMargins(9, 9, 9, 9)
         self.gridLayout_6.setObjectName("gridLayout_6")
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.gridLayout_6.addItem(spacerItem, 0, 0, 1, 1)
-        self.scrollArea = QtWidgets.QScrollArea(self.centralwidget)
-        self.scrollArea.setStyleSheet("* {\n"
-"    background-color: #ffffff;\n"
-"    border-radius: 20px;\n"
-"}")
+        self.scrollArea = QtWidgets.QScrollArea(self.time_table_layout)
+        self.scrollArea.setStyleSheet("")
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 850, 384))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 926, 460))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.gridLayout_4 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_4.setObjectName("gridLayout_4")
@@ -50,8 +91,10 @@ class Ui_MainWindow(object):
         self.gridLayout_4.addLayout(self.time_table, 0, 0, 1, 1)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.gridLayout_6.addWidget(self.scrollArea, 1, 0, 1, 2)
-        self.gridLayout_5.addLayout(self.gridLayout_6, 0, 0, 1, 1)
-        self.gridLayout_2.addLayout(self.gridLayout_5, 1, 0, 1, 1)
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout_6.addItem(spacerItem, 0, 0, 1, 1)
+        self.gridLayout_5.addWidget(self.time_table_layout, 0, 0, 1, 1)
+        self.gridLayout_2.addLayout(self.gridLayout_5, 3, 1, 1, 1)
         self.horizontalFrame = QtWidgets.QFrame(self.centralwidget)
         self.horizontalFrame.setStyleSheet("*{\n"
 "    background-color: #0388fc;\n"
@@ -163,7 +206,13 @@ class Ui_MainWindow(object):
         self.help.setFont(font)
         self.help.setObjectName("help")
         self.top_bar.addWidget(self.help)
-        self.gridLayout_2.addWidget(self.horizontalFrame, 0, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.horizontalFrame, 0, 0, 1, 3)
+        spacerItem2 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout_2.addItem(spacerItem2, 3, 0, 1, 1)
+        spacerItem3 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout_2.addItem(spacerItem3, 3, 2, 1, 1)
+        spacerItem4 = QtWidgets.QSpacerItem(10, 10, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Maximum)
+        self.gridLayout_2.addItem(spacerItem4, 1, 0, 1, 1)
         self.gridLayout_2.setRowStretch(1, 1)
         self.gridLayout_3.addLayout(self.gridLayout_2, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
