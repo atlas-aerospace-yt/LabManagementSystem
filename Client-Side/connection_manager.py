@@ -55,17 +55,16 @@ class ConnectionManager:
         Args:
             data(str): the result from the server side
         """
-        if data == "No data returned!":
+        if "syntax error" in data or "No data returned!" in data:
             return None
-
         output = []
         data_list = data.split("\n")[1:-1]
+
         for i, data_record in enumerate(data_list):
             data_record = data_record.replace("(", "")
             data_record = data_record.replace(")", "")
             output.append([])
             for data_point in data_record.split(", "):
-                print(data_point)
                 if data_point.startswith("'") and data_point.endswith("'"):
                     output[i].append(data_point.replace("'",""))
                 else:
@@ -79,16 +78,16 @@ class ConnectionManager:
         Args:
             data(str): the data that is to be sent to the client side
         """
-        data = data.encode("utf-8")
+        data = data.replace("\n"," ").encode("utf-8")
         self.server.send(data)
-        print(data)
+
         # Wait for there to be a response from the server
         while not self.data:
             pass
 
         result = self.data
         self.data = None
-        print(result)
+
         return self.parse_result(result)
 
     def end_connection(self):

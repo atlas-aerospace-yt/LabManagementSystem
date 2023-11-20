@@ -3,6 +3,8 @@ This file holds the class which runs the home screen for the
 Lab Management system.
 """
 
+from datetime import datetime, timedelta
+
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtWidgets as qtw
 
@@ -29,9 +31,15 @@ class MainUI(qtw.QMainWindow):
         self.connect_buttons()
         self.fill_in_timetable()
 
-        print(self.connection_manager.send_command(sql.GET_BOOKINGS_INFO))
+        # Get dates to fill in the QComboBox
+        today = datetime.now()
+        last_monday = today - timedelta(days=(today.weekday() - 0)%7)
+        for i in range(gui.DATE_RANGE):
+            self.ui.date_range.addItem((last_monday + timedelta(weeks=i)).strftime("%d-%m-%Y"))
+
+        self.update_display()
         timer = qtc.QTimer(self)
-        timer.setInterval(25)
+        timer.setInterval(10000)
         timer.timeout.connect(self.update_display)
         timer.start()
 
@@ -66,17 +74,30 @@ class MainUI(qtw.QMainWindow):
         if not scale:
             self.time_table_widgets[pos_i][pos_j].setMinimumHeight(50)
 
+    def format_time(self, time_hh_mm_ss:str):
+        """
+        Takes in the time in the format hh:mm:ss and puts it into the format
+        of hh:mm.
+
+        Args:
+            time_hh_mm_ss(str): the time in hh:mm:ss format
+
+        Returns:
+            str: the time in hh:mm format
+        """
+        time_list = time_hh_mm_ss.split(":")[:-1]
+        output = time_list[0] + ":" + time_list[1]
+        return output
+
     def fill_in_timetable(self):
         """
         Fill in the timetable with the correct information.
         """
         times = self.connection_manager.send_command("SELECT * FROM TIMETABLE")
+
         for i in range(len(times)):
             for j in range(1, len(times[i])):
-                time_seconds = times[i][j]
-                time = time_seconds.split(":")[:-1]
-                output = time[0] + ":" + time[1]
-                times[i][j] = output
+                times[i][j] = self.format_time(times[i][j])
 
         for i in range(len(times)+1):
             self.time_table_widgets.append([])
@@ -92,13 +113,20 @@ class MainUI(qtw.QMainWindow):
                         f"{times[i-1][1]}-{times[i-1][2]}", i, j, gui.TITLE_CSS)
                     continue
 
-                self.add_widget_to_timetable(f"QPushButton at: \n\n\n\n\n\n{i}, {j}", i, j, gui.STANDARD_CSS, True)
+                self.add_widget_to_timetable(
+                    f"QPushButton at: \n\n\n\n\n\n{i}, {j}", i, j, gui.STANDARD_CSS, True)
 
     def update_display(self):
         """
         Get the data from the database and display the booked slots.
         """
-        pass
+        # A list which has Forename, Surname, Subject, date, starttime, endtime
+        timetable = self.connection_manager.send_command(sql.GET_BOOKINGS_INFO)
+        this_monday = datetime.strptime(self.ui.date_range.currentText(), "%d-%m-%Y")
+        date_range = []
+        for i in range(7):
+            date_range.append((this_monday + timedelta(days=i)).strftime("%d-%m-%Y"))
+        print(timetable)
 
     def test(self):
         """

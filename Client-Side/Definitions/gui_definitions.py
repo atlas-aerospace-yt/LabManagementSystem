@@ -8,6 +8,8 @@ MSG_BEGINNING = "<p style=\"color:#fc7303\">>>> <font color=\"#000000\">"
 MSG_ENDING = "</P>"
 
 # Main Window definitions
+DATE_RANGE = 52
+
 DAYS_OF_THE_WEEK = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
 NUM_OF_ROWS = 25
