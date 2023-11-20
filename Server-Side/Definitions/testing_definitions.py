@@ -5,12 +5,12 @@ https://learnsql.com/blog/how-to-join-3-tables-or-more-in-sql/
 """
 
 FILL_USERS = [
-"""INSERT INTO USERS VALUES(0, "Bob Smith", "b-smith@gmail.com", "827ccb0eea8a706c4c34a16891f84e7b", 1);""",
-"""INSERT INTO USERS VALUES(1, "Adam Baker", "a-baker@gmail.com", "827ccb0eea8a706c4c34a16891f84e7b", 1);""",
-"""INSERT INTO USERS VALUES(2, "Chloe Allan", "c-allan@gmail.com", "827ccb0eea8a706c4c34a16891f84e7b", 1);""",
-"""INSERT INTO USERS VALUES(3, "Sheldon Cooper", "s-cooper@gmail.com", "827ccb0eea8a706c4c34a16891f84e7b", 2);""",
-"""INSERT INTO USERS VALUES(4, "Josh Fruzza", "j-fruzza@gmail.com", "827ccb0eea8a706c4c34a16891f84e7b", 1);""",
-"""INSERT INTO USERS VALUES(5, "Igor Ross", "i-rossh@gmail.com", "827ccb0eea8a706c4c34a16891f84e7b", 3);"""
+"""INSERT INTO USERS VALUES(0, "Bob", "Smith", "b-smith@gmail.com", "827ccb0eea8a706c4c34a16891f84e7b", 1);""",
+"""INSERT INTO USERS VALUES(1, "Adam", "Baker", "a-baker@gmail.com", "827ccb0eea8a706c4c34a16891f84e7b", 1);""",
+"""INSERT INTO USERS VALUES(2, "Chloe", "Allan", "c-allan@gmail.com", "827ccb0eea8a706c4c34a16891f84e7b", 1);""",
+"""INSERT INTO USERS VALUES(3, "Sheldon", "Cooper", "s-cooper@gmail.com", "827ccb0eea8a706c4c34a16891f84e7b", 2);""",
+"""INSERT INTO USERS VALUES(4, "Josh", "Fruzza", "j-fruzza@gmail.com", "827ccb0eea8a706c4c34a16891f84e7b", 1);""",
+"""INSERT INTO USERS VALUES(5, "Igor", "Ross", "i-rossh@gmail.com", "827ccb0eea8a706c4c34a16891f84e7b", 3);"""
 ]
 
 FILL_LABS = [
