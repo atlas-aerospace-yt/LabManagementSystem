@@ -150,6 +150,37 @@ class Ui_MainWindow(object):
 "    border-right: 5px solid #fc7303;\n"
 "    border-radius: 0px 0px 20px 20px;\n"
 "    padding: 10px;\n"
+"}\n"
+"\n"
+"/* Scroll bar */\n"
+"QScrollBar\n"
+"{\n"
+"    width:10px;\n"
+"    border: none;\n"
+"    background: #0388fc;\n"
+"}\n"
+"QScrollBar::add-page, QScrollBar::sub-page \n"
+"{\n"
+"    background: #0388fc;\n"
+"}\n"
+"QScrollBar::add-line, QScrollBar::sub-line \n"
+"{\n"
+"    background: #0388fc;\n"
+"}\n"
+"QScrollBar::handle\n"
+"{\n"
+"    background-color: #fc7303;\n"
+"    min-height: 30px;\n"
+"    border-radius: 5px;\n"
+"    border:none;\n"
+"}\n"
+"QScrollBar::up-arrow\n"
+"{\n"
+"    background: none;\n"
+"}\n"
+"QScrollBar::down-arrow\n"
+"{\n"
+"    background: none;\n"
 "}")
         self.horizontalFrame.setObjectName("horizontalFrame")
         self.top_bar = QtWidgets.QHBoxLayout(self.horizontalFrame)
@@ -182,9 +213,6 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         self.date_range.setFont(font)
         self.date_range.setObjectName("date_range")
-        self.date_range.addItem("")
-        self.date_range.addItem("")
-        self.date_range.addItem("")
         self.top_bar.addWidget(self.date_range)
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.top_bar.addItem(spacerItem1)
@@ -228,9 +256,6 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "A Lab Management System"))
         self.log_experiment.setText(_translate("MainWindow", "Log Experiment"))
         self.manage_stock.setText(_translate("MainWindow", "Manage Stock"))
-        self.date_range.setItemText(0, _translate("MainWindow", "20/11/23"))
-        self.date_range.setItemText(1, _translate("MainWindow", "27/11/23"))
-        self.date_range.setItemText(2, _translate("MainWindow", "03/12/23"))
         self.account.setText(_translate("MainWindow", "Account"))
         self.help.setText(_translate("MainWindow", "Help"))
 

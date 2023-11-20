@@ -203,6 +203,37 @@ QComboBox QAbstractItemView {
 	border-right: 5px solid #fc7303;
     border-radius: 0px 0px 20px 20px;
     padding: 10px;
+}
+
+/* Scroll bar */
+QScrollBar
+{
+	width:10px;
+	border: none;
+    background: #0388fc;
+}
+QScrollBar::add-page, QScrollBar::sub-page 
+{
+	background: #0388fc;
+}
+QScrollBar::add-line, QScrollBar::sub-line 
+{
+	background: #0388fc;
+}
+QScrollBar::handle
+{
+	background-color: #fc7303;
+	min-height: 30px;
+	border-radius: 5px;
+	border:none;
+}
+QScrollBar::up-arrow
+{
+	background: none;
+}
+QScrollBar::down-arrow
+{
+	background: none;
 }</string>
         </property>
         <layout class="QHBoxLayout" name="top_bar">
@@ -276,21 +307,6 @@ QComboBox QAbstractItemView {
              <bold>true</bold>
             </font>
            </property>
-           <item>
-            <property name="text">
-             <string>20/11/23</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>27/11/23</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>03/12/23</string>
-            </property>
-           </item>
           </widget>
          </item>
          <item>
