@@ -3,10 +3,12 @@ This file holds the class which runs the home screen for the
 Lab Management system.
 """
 
-#from PyQt5 import QtCore as qtc
+from PyQt5 import QtCore as qtc
 from PyQt5 import QtWidgets as qtw
 
 import Definitions.gui_definitions as gui
+import Definitions.sql_definitions as sql
+
 from Ui.MainWindow import Ui_MainWindow as main_window
 from graph_manager import GraphManager
 
@@ -27,6 +29,12 @@ class MainUI(qtw.QMainWindow):
         self.connect_buttons()
         self.fill_in_timetable()
 
+        print(self.connection_manager.send_command(sql.GET_BOOKINGS_INFO))
+        timer = qtc.QTimer(self)
+        timer.setInterval(25)
+        timer.timeout.connect(self.update_display)
+        timer.start()
+
     def connect_buttons(self):
         """
         Connect all of the buttons from the frontend to the rest
@@ -37,7 +45,7 @@ class MainUI(qtw.QMainWindow):
         self.ui.log_experiment.clicked.connect(self.open_graph_window)
         self.ui.manage_stock.clicked.connect(self.test)
 
-    def add_widget_to_timetable(self, text, pos_i, pos_j , stylesheet=""):
+    def add_widget_to_timetable(self, text, pos_i, pos_j , stylesheet="", scale=False):
         """
         Add a widget to the timetable grid on the front of the screen.
 
@@ -50,11 +58,13 @@ class MainUI(qtw.QMainWindow):
             pos_j(int): the column to put the widget in
             stylesheet(str): the css to style the QTextBrowser
         """
-        self.time_table_widgets[pos_i].append(qtw.QTextBrowser())
-        self.time_table_widgets[pos_i][pos_j].setMinimumHeight(50)
-        self.time_table_widgets[pos_i][pos_j].setText(text)
+        self.time_table_widgets[pos_i].append(qtw.QPushButton(text))
         self.time_table_widgets[pos_i][pos_j].setStyleSheet(stylesheet)
+        self.time_table_widgets[pos_i][pos_j].clicked.connect(self.test)
         self.ui.time_table.addWidget(self.time_table_widgets[pos_i][pos_j], pos_i, pos_j)
+
+        if not scale:
+            self.time_table_widgets[pos_i][pos_j].setMinimumHeight(50)
 
     def fill_in_timetable(self):
         """
@@ -82,10 +92,13 @@ class MainUI(qtw.QMainWindow):
                         f"{times[i-1][1]}-{times[i-1][2]}", i, j, gui.TITLE_CSS)
                     continue
 
-                self.time_table_widgets[i].append(qtw.QTextBrowser())
-                self.time_table_widgets[i][j].setMinimumHeight(50)
-                self.time_table_widgets[i][j].setText(f"QTextBrowser at: \n{i}, {j}")
-                self.ui.time_table.addWidget(self.time_table_widgets[i][j], i, j)
+                self.add_widget_to_timetable(f"QPushButton at: \n\n\n\n\n\n{i}, {j}", i, j, gui.STANDARD_CSS, True)
+
+    def update_display(self):
+        """
+        Get the data from the database and display the booked slots.
+        """
+        pass
 
     def test(self):
         """

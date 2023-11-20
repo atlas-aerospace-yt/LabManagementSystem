@@ -18,6 +18,15 @@ TITLE_CSS = """
     text-align: center;
     color: #fc7303;
     font-weight: bold;
-    padding-left: 5px;
-    padding-top: 5px;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 10px;
+}"""
+
+STANDARD_CSS = """
+*{
+    text-align: center;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 10px;
 }"""

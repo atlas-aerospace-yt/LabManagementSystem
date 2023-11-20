@@ -65,6 +65,7 @@ class ConnectionManager:
             data_record = data_record.replace(")", "")
             output.append([])
             for data_point in data_record.split(", "):
+                print(data_point)
                 if data_point.startswith("'") and data_point.endswith("'"):
                     output[i].append(data_point.replace("'",""))
                 else:
@@ -80,13 +81,14 @@ class ConnectionManager:
         """
         data = data.encode("utf-8")
         self.server.send(data)
-
+        print(data)
         # Wait for there to be a response from the server
         while not self.data:
             pass
 
         result = self.data
         self.data = None
+        print(result)
         return self.parse_result(result)
 
     def end_connection(self):
