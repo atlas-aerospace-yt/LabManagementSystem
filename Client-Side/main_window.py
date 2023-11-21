@@ -69,6 +69,8 @@ class MainUI(qtw.QMainWindow):
         self.time_table_widgets[pos_i].append(qtw.QPushButton(text))
         self.time_table_widgets[pos_i][pos_j].setStyleSheet(stylesheet)
         self.time_table_widgets[pos_i][pos_j].clicked.connect(self.test)
+        self.time_table_widgets[pos_i][pos_j].setSizePolicy(
+            qtw.QSizePolicy(qtw.QSizePolicy.Expanding, qtw.QSizePolicy.Expanding))
         self.ui.time_table.addWidget(self.time_table_widgets[pos_i][pos_j], pos_i, pos_j)
 
         if not scale:
@@ -122,11 +124,35 @@ class MainUI(qtw.QMainWindow):
         """
         # A list which has Forename, Surname, Subject, date, starttime, endtime
         timetable = self.connection_manager.send_command(sql.GET_BOOKINGS_INFO)
+
+        # Get a list of dates of the week
         this_monday = datetime.strptime(self.ui.date_range.currentText(), "%d-%m-%Y")
         date_range = []
         for i in range(7):
             date_range.append((this_monday + timedelta(days=i)).strftime("%d-%m-%Y"))
-        print(timetable)
+
+        # Get the list of times that are being displayed
+        times = []
+        for widget_list in self.time_table_widgets:
+            times.append(widget_list[0].text())
+        times.pop(0)
+
+        # Parse the bookings to add to the timetable
+        bookings = {}
+        for booking in timetable:
+            string = f"\n{booking[0]}, {booking[1]}\n{booking[2]}\n"
+            i = 1 + times.index(f"{self.format_time(booking[4])}-{self.format_time(booking[5])}")
+            j = 1 + date_range.index(booking[3])
+            if (i,j) in list(bookings.keys()):
+                bookings[(i,j)] += string
+            else:
+                bookings[(i,j)] = string
+
+        for i in range(1,8):
+            for j in range(1,len(times)+1):
+                if (i,j) in list(bookings.keys()):
+                    self.time_table_widgets[i][j].setText(bookings[(i,j)])
+
 
     def test(self):
         """
