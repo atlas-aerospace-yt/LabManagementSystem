@@ -32,3 +32,19 @@ STANDARD_CSS = """
     border: none;
     border-radius: 10px;
 }"""
+
+FULL_CSS = """
+*{
+    text-align: center;
+    background-color: #fc7303;
+    border: none;
+    border-radius: 10px;
+}"""
+
+BOOKED_CSS = """
+*{
+    text-align: center;
+    background-color: #00ff44;
+    border: none;
+    border-radius: 10px;
+}"""

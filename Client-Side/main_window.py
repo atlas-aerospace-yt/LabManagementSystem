@@ -52,6 +52,7 @@ class MainUI(qtw.QMainWindow):
         self.ui.help.clicked.connect(self.test)
         self.ui.log_experiment.clicked.connect(self.open_graph_window)
         self.ui.manage_stock.clicked.connect(self.test)
+        self.ui.date_range.activated[str].connect(self.update_display)
 
     def add_widget_to_timetable(self, text, pos_i, pos_j , stylesheet="", scale=False):
         """
@@ -142,17 +143,23 @@ class MainUI(qtw.QMainWindow):
         for booking in timetable:
             string = f"\n{booking[0]}, {booking[1]}\n{booking[2]}\n"
             i = 1 + times.index(f"{self.format_time(booking[4])}-{self.format_time(booking[5])}")
+
+            if booking[3] not in date_range:
+                continue
             j = 1 + date_range.index(booking[3])
+
             if (i,j) in list(bookings.keys()):
                 bookings[(i,j)] += string
             else:
                 bookings[(i,j)] = string
 
-        for i in range(1,8):
-            for j in range(1,len(times)+1):
+        for i in range(1,len(times)+1):
+            for j in range(1,8):
                 if (i,j) in list(bookings.keys()):
                     self.time_table_widgets[i][j].setText(bookings[(i,j)])
-
+                    self.time_table_widgets[i][j].setStyleSheet(gui.BOOKED_CSS)
+                else:
+                    self.time_table_widgets[i][j].setText("")
 
     def test(self):
         """
