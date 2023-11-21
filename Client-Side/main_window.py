@@ -160,6 +160,7 @@ class MainUI(qtw.QMainWindow):
                     self.time_table_widgets[i][j].setStyleSheet(gui.BOOKED_CSS)
                 else:
                     self.time_table_widgets[i][j].setText("")
+                    self.time_table_widgets[i][j].setStyleSheet(gui.PLAIN_CSS)
 
     def test(self):
         """

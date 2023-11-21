@@ -48,3 +48,11 @@ BOOKED_CSS = """
     border: none;
     border-radius: 10px;
 }"""
+
+PLAIN_CSS = """
+*{
+    background-color: #ffffff;
+    border:none;
+    border-radius: 10px
+}
+"""
