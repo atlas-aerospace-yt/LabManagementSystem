@@ -101,13 +101,19 @@ class ConnectionManager:
         while self.running:
             pass
 
-# Check if this file is being run this loop is inspired by:
-# https://www.datacamp.com/tutorial/a-complete-guide-to-socket-programming-in-python
-if __name__ == "__main__":
 
+def test_function():
+    """
+    Test the connection manager.
+    """
     my_connection = ConnectionManager()
 
     usr_input = ""
     while usr_input != "exit":
         usr_input = input("Enter SQL command: ")
         print(my_connection.send_command(usr_input))
+
+# Check if this file is being run this loop is inspired by:
+# https://www.datacamp.com/tutorial/a-complete-guide-to-socket-programming-in-python
+if __name__ == "__main__":
+    test_function()
