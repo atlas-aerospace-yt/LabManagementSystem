@@ -65,6 +65,8 @@ class ConnectionManager:
             data_record = data_record.replace(")", "")
             output.append([])
             for data_point in data_record.split(", "):
+                if data_point.endswith(","):
+                    data_point = data_point[0:-1]
                 if data_point.startswith("'") and data_point.endswith("'"):
                     output[i].append(data_point.replace("'",""))
                 else:

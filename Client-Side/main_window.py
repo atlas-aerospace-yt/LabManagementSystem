@@ -98,7 +98,7 @@ class MainUI(qtw.QMainWindow):
         """
         times = self.connection_manager.send_command("SELECT * FROM TIMETABLE")
 
-        for i in range(len(times)):
+        for i, _ in enumerate(times):
             for j in range(1, len(times[i])):
                 times[i][j] = self.format_time(times[i][j])
 
@@ -116,15 +116,20 @@ class MainUI(qtw.QMainWindow):
                         f"{times[i-1][1]}-{times[i-1][2]}", i, j, gui.TITLE_CSS)
                     continue
 
-                self.add_widget_to_timetable(
-                    f"QPushButton at: \n\n\n\n\n\n{i}, {j}", i, j, gui.STANDARD_CSS, True)
+                self.add_widget_to_timetable("", i, j, gui.STANDARD_CSS, True)
 
     def update_display(self):
         """
         Get the data from the database and display the booked slots.
         """
+
+        # Get all of the bookable labs
+        labs = self.connection_manager.send_command(sql.GET_LABS)
+        print(labs)
+
         # A list which has Forename, Surname, Subject, date, starttime, endtime
         timetable = self.connection_manager.send_command(sql.GET_BOOKINGS_INFO)
+        print(timetable)
 
         # Get a list of dates of the week
         this_monday = datetime.strptime(self.ui.date_range.currentText(), "%d-%m-%Y")
@@ -144,20 +149,26 @@ class MainUI(qtw.QMainWindow):
             string = f"\n{booking[0]}, {booking[1]}\n{booking[2]}\n"
             i = 1 + times.index(f"{self.format_time(booking[4])}-{self.format_time(booking[5])}")
 
-            if booking[3] not in date_range:
-                continue
-            j = 1 + date_range.index(booking[3])
-
-            if (i,j) in list(bookings.keys()):
-                bookings[(i,j)] += string
+            if booking[3] in date_range:
+                j = 1 + date_range.index(booking[3])
             else:
-                bookings[(i,j)] = string
+                continue
 
+            if (i,j) in bookings:
+                bookings[(i,j)][0] += string
+                bookings[(i,j)][1].append(booking[2])
+            else:
+                bookings[(i,j)] = [string, [booking[2]]]
+
+        # Display the bookings to the users
         for i in range(1,len(times)+1):
             for j in range(1,8):
-                if (i,j) in list(bookings.keys()):
-                    self.time_table_widgets[i][j].setText(bookings[(i,j)])
+                if (i,j) in bookings and len(bookings[(i,j)][1]) < len(labs):
+                    self.time_table_widgets[i][j].setText(bookings[(i,j)][0])
                     self.time_table_widgets[i][j].setStyleSheet(gui.BOOKED_CSS)
+                elif (i,j) in bookings and len(bookings[(i,j)][1]) == len(labs):
+                    self.time_table_widgets[i][j].setText(bookings[(i,j)][0])
+                    self.time_table_widgets[i][j].setStyleSheet(gui.FULL_CSS)
                 else:
                     self.time_table_widgets[i][j].setText("")
                     self.time_table_widgets[i][j].setStyleSheet(gui.PLAIN_CSS)
