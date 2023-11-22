@@ -39,7 +39,7 @@ class MainUI(qtw.QMainWindow):
 
         self.update_display()
         timer = qtc.QTimer(self)
-        timer.setInterval(10000)
+        timer.setInterval(60000)
         timer.timeout.connect(self.update_display)
         timer.start()
 
