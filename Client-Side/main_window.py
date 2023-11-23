@@ -13,6 +13,7 @@ import Definitions.sql_definitions as sql
 
 from Ui.MainWindow import Ui_MainWindow as main_window
 from graph_manager import GraphManager
+from booking_manager import BookingManager
 
 class MainUI(qtw.QMainWindow):
     """
@@ -177,7 +178,7 @@ class MainUI(qtw.QMainWindow):
         """
         Test button clicks.
         """
-        print("Worked")
+        BookingManager(self)
 
     def open_graph_window(self):
         """

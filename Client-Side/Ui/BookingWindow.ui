@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>BookingWindow</class>
+ <widget class="QMainWindow" name="BookingWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>854</width>
+    <height>593</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Laboratory Booking</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">/*General Styling*/
+
+* {
+	font: 10pt &quot;Roboto&quot;;
+    font-size: 14px;
+	line-height: 20px;
+	background-color: #0388fc;
+	color: #000000;
+}
+
+/* Text box styling*/
+
+QTextBrowser {
+	border: none;
+	padding-left:10px; 
+	padding-top:10px;
+	background-color: #FFFFFF;
+	border-radius: 20px;
+}
+
+/* Line edit styling */
+QLineEdit {
+	border: 10px;
+	border-color: #fc7303;
+	padding-left:10px; 
+	background-color: #FFFFFF;
+	border-radius: 20px;
+}
+QLineEdit::hover {
+	border: 5px solid;
+	border-color: #fc7303;
+}
+
+/* Label styling */
+QLabel {
+	border: none;
+	border-radius: 20px;
+	padding-left:10px; 
+	background-color: #FFFFFF;
+	color: #fc7303;
+	font-size: 30px;
+}
+
+/* Scroll bar */
+QScrollBar
+{
+	width: 20px;
+	border:none;
+    border-radius: 10px;
+    background: #ffffff;
+}
+QScrollBar::add-page, QScrollBar::sub-page 
+{
+	background: #ffffff;
+}
+QScrollBar::add-line, QScrollBar::sub-line 
+{
+	background: #ffffff;
+}
+QScrollBar::handle
+{
+	background-color: #fc7303;
+	min-height: 30px;
+	border-radius: 10px;
+	border:none;
+}
+QScrollBar::up-arrow
+{
+	background: none;
+}
+QScrollBar::down-arrow
+{
+	background: none;
+}
+
+/* Button styling */
+QPushButton {
+	background-color: #ffffff;
+	border-radius: 20px;
+}
+QPushButton::hover {
+	border: 5px solid;
+	border-color: #fc7303;
+}
+QPushButton::pressed {
+	background-color: #fc7303;
+	color: #ffffff;
+}
+
+/* Combo Box Styling */
+QComboBox {
+    background-color: #ffffff;
+    border: 5px solid #ffffff;
+	border-radius: 20px;
+    padding-left: 20px;
+}
+QComboBox:hover {
+    border: 5px solid #fc7303;
+}
+QComboBox:editable {
+    background: #ffffff;
+}
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    border: none;
+}
+QComboBox QAbstractItemView {
+	color: #000000;
+	background-color: #ffffff;
+    border: 5px solid #fc7303;
+    padding: 10px;
+}
+</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0">
+     <layout class="QGridLayout" name="gridLayout" columnstretch="2,2,1">
+      <item row="1" column="0" colspan="3">
+       <widget class="QLabel" name="notification">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLineEdit" name="stock_amount">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="placeholderText">
+         <string>Stock amount</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" rowspan="12" colspan="2">
+       <widget class="QTextBrowser" name="booking_info"/>
+      </item>
+      <item row="12" column="0">
+       <widget class="QPushButton" name="confirm_booking">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Confirm Booking</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="7" column="0">
+       <widget class="QPushButton" name="add_stock">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Add Stock</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="0">
+       <widget class="QComboBox" name="date">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QComboBox" name="stock">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="10" column="0">
+       <widget class="QComboBox" name="time">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="0">
+       <widget class="QComboBox" name="lab">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
