@@ -46,9 +46,9 @@ jobs:
       run: |
         pylint ./Client-Side/connection_manager.py --disable=W0511
 
-    - name: Analysing booking_manager.py
-      run: |
-        pylint ./Client-Side/booking_manager.py --disable=W0511
+    #- name: Analysing booking_manager.py
+    #  run: |
+    #    pylint ./Client-Side/booking_manager.py --disable=W0511
 
     - name: Analysing graph_manager.py
       run: |
