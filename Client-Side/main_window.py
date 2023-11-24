@@ -63,7 +63,7 @@ class MainUI(qtw.QMainWindow):
         self.ui.manage_stock.clicked.connect(self.test)
         self.ui.date_range.activated[str].connect(self.update_display)
 
-    def add_widget_to_timetable(self, text, pos_i, pos_j , stylesheet="", scale=False):
+    def add_widget_to_timetable(self, text, pos, stylesheet="", scale=False):
         """
         Add a widget to the timetable grid on the front of the screen.
 
@@ -76,16 +76,16 @@ class MainUI(qtw.QMainWindow):
             pos_j(int): the column to put the widget in
             stylesheet(str): the css to style the QTextBrowser
         """
-        self.time_table_widgets[pos_i].append(qtw.QPushButton(text))
-        self.time_table_widgets[pos_i][pos_j].setStyleSheet(stylesheet)
-        self.time_table_widgets[pos_i][pos_j].clicked.connect(
-            lambda: self.open_booking_window(pos_i, pos_j))
-        self.time_table_widgets[pos_i][pos_j].setSizePolicy(
+        self.time_table_widgets[pos[0]].append(qtw.QPushButton(text))
+        self.time_table_widgets[pos[0]][pos[1]].setStyleSheet(stylesheet)
+        self.time_table_widgets[pos[0]][pos[1]].clicked.connect(
+            lambda: self.open_booking_window(pos[0], pos[1]))
+        self.time_table_widgets[pos[0]][pos[1]].setSizePolicy(
             qtw.QSizePolicy(qtw.QSizePolicy.Expanding, qtw.QSizePolicy.Expanding))
-        self.ui.time_table.addWidget(self.time_table_widgets[pos_i][pos_j], pos_i, pos_j)
+        self.ui.time_table.addWidget(self.time_table_widgets[pos[0]][pos[1]], pos[0], pos[1])
 
         if not scale:
-            self.time_table_widgets[pos_i][pos_j].setMinimumHeight(50)
+            self.time_table_widgets[pos[0]][pos[1]].setMinimumHeight(50)
 
     def format_time(self, time_hh_mm_ss:str):
         """
@@ -115,17 +115,14 @@ class MainUI(qtw.QMainWindow):
             self.time_table_widgets.append([])
             for j in range(gui.NUM_OF_COLS):
                 if i == 0 and j == 0:
-                    self.add_widget_to_timetable("TimeTable", i, j, gui.TITLE_CSS)
-                    continue
+                    self.add_widget_to_timetable("TimeTable", (i, j), gui.TITLE_CSS)
                 elif i == 0:
-                    self.add_widget_to_timetable(gui.DAYS_OF_THE_WEEK[j-1], i, j, gui.TITLE_CSS)
-                    continue
+                    self.add_widget_to_timetable(gui.DAYS_OF_THE_WEEK[j-1], (i, j), gui.TITLE_CSS)
                 elif j == 0:
                     self.add_widget_to_timetable(
-                        f"{self.times[i-1][1]}-{self.times[i-1][2]}", i, j, gui.TITLE_CSS)
-                    continue
-
-                self.add_widget_to_timetable("", i, j, gui.STANDARD_CSS, True)
+                        f"{self.times[i-1][1]}-{self.times[i-1][2]}", (i, j), gui.TITLE_CSS)
+                else:
+                    self.add_widget_to_timetable("", (i, j), gui.STANDARD_CSS, True)
 
     def update_display(self):
         """
