@@ -26,17 +26,25 @@ class MainUI(qtw.QMainWindow):
         self.ui = main_window()
 
         self.time_table_widgets = []
+        self.bookings = {}
         self.connection_manager = connection_manager
 
         self.ui.setupUi(self)
-        self.connect_buttons()
-        self.fill_in_timetable()
 
         # Get dates to fill in the QComboBox
         today = datetime.now()
         last_monday = today - timedelta(days=(today.weekday() - 0)%7)
         for i in range(gui.DATE_RANGE):
             self.ui.date_range.addItem((last_monday + timedelta(weeks=i)).strftime("%d-%m-%Y"))
+
+        # Get all of the bookable labs
+        self.labs = self.connection_manager.send_command(sql.GET_LABS)
+
+        # Get all of the time slots
+        self.times = self.connection_manager.send_command("SELECT * FROM TIMETABLE")
+
+        self.connect_buttons()
+        self.fill_in_timetable()
 
         self.update_display()
         timer = qtc.QTimer(self)
@@ -70,7 +78,8 @@ class MainUI(qtw.QMainWindow):
         """
         self.time_table_widgets[pos_i].append(qtw.QPushButton(text))
         self.time_table_widgets[pos_i][pos_j].setStyleSheet(stylesheet)
-        self.time_table_widgets[pos_i][pos_j].clicked.connect(self.test)
+        self.time_table_widgets[pos_i][pos_j].clicked.connect(
+            lambda: self.open_booking_window(pos_i, pos_j))
         self.time_table_widgets[pos_i][pos_j].setSizePolicy(
             qtw.QSizePolicy(qtw.QSizePolicy.Expanding, qtw.QSizePolicy.Expanding))
         self.ui.time_table.addWidget(self.time_table_widgets[pos_i][pos_j], pos_i, pos_j)
@@ -97,13 +106,12 @@ class MainUI(qtw.QMainWindow):
         """
         Fill in the timetable with the correct information.
         """
-        times = self.connection_manager.send_command("SELECT * FROM TIMETABLE")
 
-        for i, _ in enumerate(times):
-            for j in range(1, len(times[i])):
-                times[i][j] = self.format_time(times[i][j])
+        for i, _ in enumerate(self.times):
+            for j in range(1, len(self.times[i])):
+                self.times[i][j] = self.format_time(self.times[i][j])
 
-        for i in range(len(times)+1):
+        for i in range(len(self.times)+1):
             self.time_table_widgets.append([])
             for j in range(gui.NUM_OF_COLS):
                 if i == 0 and j == 0:
@@ -114,7 +122,7 @@ class MainUI(qtw.QMainWindow):
                     continue
                 elif j == 0:
                     self.add_widget_to_timetable(
-                        f"{times[i-1][1]}-{times[i-1][2]}", i, j, gui.TITLE_CSS)
+                        f"{self.times[i-1][1]}-{self.times[i-1][2]}", i, j, gui.TITLE_CSS)
                     continue
 
                 self.add_widget_to_timetable("", i, j, gui.STANDARD_CSS, True)
@@ -124,13 +132,8 @@ class MainUI(qtw.QMainWindow):
         Get the data from the database and display the booked slots.
         """
 
-        # Get all of the bookable labs
-        labs = self.connection_manager.send_command(sql.GET_LABS)
-        print(labs)
-
         # A list which has Forename, Surname, Subject, date, starttime, endtime
         timetable = self.connection_manager.send_command(sql.GET_BOOKINGS_INFO)
-        print(timetable)
 
         # Get a list of dates of the week
         this_monday = datetime.strptime(self.ui.date_range.currentText(), "%d-%m-%Y")
@@ -145,7 +148,7 @@ class MainUI(qtw.QMainWindow):
         times.pop(0)
 
         # Parse the bookings to add to the timetable
-        bookings = {}
+        self.bookings = {}
         for booking in timetable:
             string = f"\n{booking[0]}, {booking[1]}\n{booking[2]}\n"
             i = 1 + times.index(f"{self.format_time(booking[4])}-{self.format_time(booking[5])}")
@@ -155,33 +158,48 @@ class MainUI(qtw.QMainWindow):
             else:
                 continue
 
-            if (i,j) in bookings:
-                bookings[(i,j)][0] += string
-                bookings[(i,j)][1].append(booking[2])
+            if (i,j) in self.bookings:
+                self.bookings[(i,j)][0] += string
+                self.bookings[(i,j)][1].append(booking[2])
             else:
-                bookings[(i,j)] = [string, [booking[2]]]
+                self.bookings[(i,j)] = [string, [booking[2]]]
 
         # Display the bookings to the users
         for i in range(1,len(times)+1):
             for j in range(1,8):
-                if (i,j) in bookings and len(bookings[(i,j)][1]) < len(labs):
-                    self.time_table_widgets[i][j].setText(bookings[(i,j)][0])
+                if (i,j) in self.bookings and len(self.bookings[(i,j)][1]) < len(self.labs):
+                    self.time_table_widgets[i][j].setText(self.bookings[(i,j)][0])
                     self.time_table_widgets[i][j].setStyleSheet(gui.BOOKED_CSS)
-                elif (i,j) in bookings and len(bookings[(i,j)][1]) == len(labs):
-                    self.time_table_widgets[i][j].setText(bookings[(i,j)][0])
+                elif (i,j) in self.bookings and len(self.bookings[(i,j)][1]) == len(self.labs):
+                    self.time_table_widgets[i][j].setText(self.bookings[(i,j)][0])
                     self.time_table_widgets[i][j].setStyleSheet(gui.FULL_CSS)
                 else:
                     self.time_table_widgets[i][j].setText("")
                     self.time_table_widgets[i][j].setStyleSheet(gui.PLAIN_CSS)
 
-    def test(self):
+    def open_booking_window(self, i, j):
         """
-        Test button clicks.
+        This function opens the booking window for the users to book stock.
+
+        Args:
+            i(int): the i index in self.timetable_widgets
+            j(int): the j index in self.timetable_widgets
         """
-        BookingManager(self)
+
+        if 1 <= i <= len(self.time_table_widgets) and 1 <= j <= len(self.time_table_widgets[0]):
+            if (i,j) not in self.bookings:
+                BookingManager(self)
+            elif len(self.bookings[(i,j)][1]) != len(self.labs):
+                BookingManager(self)
 
     def open_graph_window(self):
         """
         Open the graph window so that they can log experiments.
         """
         GraphManager(self)
+
+    def test(self):
+        """
+        A test function to show button clicks.
+        """
+        print("Worked!")
