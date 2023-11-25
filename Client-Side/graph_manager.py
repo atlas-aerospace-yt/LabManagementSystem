@@ -54,9 +54,9 @@ class GraphManager(qtw.QMainWindow):
         if not self.status:
             return
 
-        message = gui.MSG_TITLE
+        message = gui.GRAPH_MSG_TITLE
         for x_value, y_value in zip(self.x_co_ordinates, self.y_co_ordinates):
-            message += f"{gui.MSG_BEGINNING} {x_value}, {y_value}{gui.MSG_ENDING}"
+            message += f"{gui.GRAPH_MSG_BEGINNING} {x_value}, {y_value}{gui.GRAPH_MSG_ENDING}"
         self.ui.data.setHtml(message)
 
         self.status = 0
@@ -69,7 +69,7 @@ class GraphManager(qtw.QMainWindow):
         self.y_co_ordinates = []
         self.status = 1
 
-    def verify_data(self, x_co_ordinare:str, y_co_ordinate:str) -> bool:
+    def verify_data(self, x_co_ordinate:str, y_co_ordinate:str) -> bool:
         """
         Verify the x and y coordingate that have been input and that the data is
         numerical even if it is negative (has "-") or a decimal (has ".").
@@ -81,10 +81,13 @@ class GraphManager(qtw.QMainWindow):
         Returns:
             bool: if the data is valid or not
         """
-        integer_x = x_co_ordinare.replace(".","").replace("-","")
+
+        if x_co_ordinate.count(".") > 1 or y_co_ordinate.count(".") > 1:
+            return False
+
+        integer_x = x_co_ordinate.replace(".","").replace("-","")
         integer_y = y_co_ordinate.replace(".","").replace("-","")
 
-        print(integer_x.isnumeric(), integer_y.isnumeric())
         if integer_x.isnumeric() and integer_y.isnumeric():
             return True
         return False

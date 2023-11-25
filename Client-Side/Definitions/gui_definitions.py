@@ -3,9 +3,9 @@ This file holds the definitions for all the GUIs.
 """
 
 # Graphing definitions
-MSG_TITLE = "<h1><p style=\"color:#fc7303\">Graph values (x, y)</p></h1>"
-MSG_BEGINNING = "<p style=\"color:#fc7303\">>>> <font color=\"#000000\">"
-MSG_ENDING = "</P>"
+GRAPH_MSG_TITLE = "<h1><p style=\"color:#fc7303\">Graph values (x, y)</p></h1>"
+GRAPH_MSG_BEGINNING = "<p style=\"color:#fc7303\">>>> <font color=\"#000000\">"
+GRAPH_MSG_ENDING = "</P>"
 
 # Main Window definitions
 DATE_RANGE = 52
@@ -56,3 +56,9 @@ PLAIN_CSS = """
     border-radius: 10px
 }
 """
+
+# Booking definitions
+BOOKING_TITLE_BEGINNING = "<h1><p style=\"color:#fc7303\">Booking for "
+BOOKING_TITLE_ENDING = "</p></h1>"
+BOOKING_MSG_BEGINNING = "<p style=\"color:#fc7303\">>>> <font color=\"#000000\">"
+BOOKING_MSG_ENDING = "</P>"
