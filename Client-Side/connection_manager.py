@@ -67,8 +67,10 @@ class ConnectionManager:
             for data_point in data_record.split(", "):
                 if data_point.endswith(","):
                     data_point = data_point[0:-1]
-                if data_point.startswith("'") and data_point.endswith("'"):
+                elif data_point.startswith("'") and data_point.endswith("'"):
                     output[i].append(data_point.replace("'",""))
+                elif data_point.isnumeric():
+                    output[i].append(int(data_point))
                 else:
                     output[i].append(float(data_point))
         return output
