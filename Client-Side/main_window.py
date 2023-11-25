@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtWidgets as qtw
+from PyQt5 import QtGui as qtg
 
 import Definitions.gui_definitions as gui
 import Definitions.sql_definitions as sql
@@ -183,11 +184,23 @@ class MainUI(qtw.QMainWindow):
             j(int): the j index in self.timetable_widgets
         """
 
+        # Get a list of dates of the week
+        this_monday = datetime.strptime(self.ui.date_range.currentText(), "%d-%m-%Y")
+        date_range = []
+        for day in range(7):
+            date_range.append((this_monday + timedelta(days=day)).strftime("%d-%m-%Y"))
+
         if 1 <= i <= len(self.time_table_widgets) and 1 <= j <= len(self.time_table_widgets[0]):
             if (i,j) not in self.bookings:
-                BookingManager(self)
+                BookingManager(
+                    self.connection_manager, self.times[i-1], date_range[j-1], self.labs, self)
             elif len(self.bookings[(i,j)][1]) != len(self.labs):
-                BookingManager(self)
+                labs = []
+                for lab in self.labs:
+                    if lab[1] not in self.bookings[(i, j)][1]:
+                        labs.append(lab)
+                BookingManager(
+                    self.connection_manager, self.times[i-1], date_range[j-1], labs, self)
 
     def open_graph_window(self):
         """
