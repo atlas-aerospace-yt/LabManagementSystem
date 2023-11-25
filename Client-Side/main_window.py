@@ -7,7 +7,6 @@ from datetime import datetime, timedelta
 
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtWidgets as qtw
-from PyQt5 import QtGui as qtg
 
 import Definitions.gui_definitions as gui
 import Definitions.sql_definitions as sql
