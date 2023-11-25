@@ -4,7 +4,10 @@ This file holds the BookingManager class.
 TODO -> all functions that say "pass".
 """
 
+from PyQt5 import QtCore as qtc
 from PyQt5 import QtWidgets as qtw
+
+import Definitions.gui_definitions as gui
 
 from Ui.BookingWindow import Ui_BookingWindow as booking_window
 
@@ -15,17 +18,32 @@ class BookingManager(qtw.QMainWindow):
 
     def __init__(self, connection_manager, time, date, labs, parent=None):
         super().__init__(parent=parent)
+
         self.connection_manager = connection_manager
-        print(time)
-        print(date)
-        print(labs)
-        print(self.connection_manager.send_command("SELECT StockID, Name, Amount FROM STOCK"))
+
+        self.time = time
+        self.date = date
+
         self.ui = booking_window()
         self.ui.setupUi(self)
+
+        # Fill in the QComboBoxes
+        stock = self.connection_manager.send_command("SELECT StockID, Name, Amount FROM STOCK")
+        for stock_item in stock:
+            self.ui.stock.addItem(stock_item[1])
+
+        for lab in labs:
+            self.ui.lab.addItem(lab[1])
 
         self.connect_buttons()
 
         self.show()
+
+        self.update()
+        timer = qtc.QTimer(self)
+        timer.setInterval(25)
+        timer.timeout.connect(self.update)
+        timer.start()
 
     def connect_buttons(self):
         """
@@ -35,17 +53,16 @@ class BookingManager(qtw.QMainWindow):
         self.ui.add_stock.clicked.connect(self.add_stock)
         self.ui.confirm_booking.clicked.connect(self.commit_booking)
 
-    def show_stock(self):
+    def update(self):
         """
-        Show the available stock in the drop down widget.
+        Change the text on the browser to show the date, time, and any booked stock
+        so the user can see all information.
         """
-        pass
+        html = gui.BOOKING_TITLE_BEGINNING
+        html += f"{self.date} at {self.time[1]}-{self.time[2]}"
+        html += gui.BOOKING_MSG_ENDING
 
-    def show_labs(self):
-        """
-        Show the avaliable labs in the drop down widget.
-        """
-        pass
+        self.ui.booking_info.setHtml(html)
 
     def add_stock(self):
         """
