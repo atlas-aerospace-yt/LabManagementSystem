@@ -19,10 +19,17 @@ if __name__ == "__main__":
 
     app = qtw.QApplication(sys.argv)
 
-    connection_manager = ConnectionManager()
+    try:
+        connection_manager = ConnectionManager()
+    except ConnectionRefusedError:
+        error = qtw.QMessageBox.critical(None,
+                                         "Startup Error", 
+                                         "Could not connect to the server!",
+                                         qtw.QMessageBox.Cancel)
+        sys.exit()
 
-    server_side_ui = MainUI(connection_manager)
-    server_side_ui.show()
+    client_side_ui = MainUI(connection_manager)
+    client_side_ui.show()
 
     app.exec_()
 
