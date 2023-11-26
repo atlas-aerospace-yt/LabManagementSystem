@@ -36,7 +36,7 @@ STANDARD_CSS = """
 FULL_CSS = """
 *{
     text-align: center;
-    background-color: #fc7303;
+    background-color: #e067da;
     border: none;
     border-radius: 10px;
 }"""
