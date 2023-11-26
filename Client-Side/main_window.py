@@ -14,6 +14,7 @@ import Definitions.sql_definitions as sql
 from Ui.MainWindow import Ui_MainWindow as main_window
 from graph_manager import GraphManager
 from booking_manager import BookingManager
+from account_manager import AccountManager
 
 class MainUI(qtw.QMainWindow):
     """
@@ -57,7 +58,7 @@ class MainUI(qtw.QMainWindow):
         Connect all of the buttons from the frontend to the rest
         of the code.
         """
-        self.ui.account.clicked.connect(self.test)
+        self.ui.account.clicked.connect(self.open_account_window)
         self.ui.help.clicked.connect(self.test)
         self.ui.log_experiment.clicked.connect(self.open_graph_window)
         self.ui.manage_stock.clicked.connect(self.test)
@@ -206,6 +207,12 @@ class MainUI(qtw.QMainWindow):
         Open the graph window so that they can log experiments.
         """
         GraphManager(self)
+
+    def open_account_window(self):
+        """
+        Open the account window so that the user can manage their account.
+        """
+        AccountManager(self)
 
     def test(self):
         """
