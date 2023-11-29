@@ -2,6 +2,10 @@
 This file holds the class which handles the account management UI.    
 """
 
+import global_vars
+
+import hashlib
+
 from PyQt5 import QtWidgets as qtw
 
 from Ui.AccountWindow import Ui_AccountWindow as account_window
@@ -12,10 +16,8 @@ class AccountManager(qtw.QMainWindow):
     account management window.
     """
 
-    def __init__(self, logged_in, parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent=parent)
-
-        self.is_logged_in = logged_in
 
         self.name = ""
         self.email = ""
@@ -41,9 +43,9 @@ class AccountManager(qtw.QMainWindow):
         Only show the correct widgets whether the user is logged in or
         not logged in.
         """
-        if self.is_logged_in:
+        if global_vars.LOGGED_IN:
             self.ui.email_in.setVisible(False)
-            self.ui.name_in.setVisible(False)
+            self.ui.password.setVisible(False)
             self.ui.login.setVisible(False)
             self.ui.logout.setVisible(True)
             self.ui.priority.setVisible(True)
@@ -51,7 +53,7 @@ class AccountManager(qtw.QMainWindow):
             self.ui.email.setVisible(True)
         else:
             self.ui.email_in.setVisible(True)
-            self.ui.name_in.setVisible(True)
+            self.ui.password.setVisible(True)
             self.ui.login.setVisible(True)
             self.ui.logout.setVisible(False)
             self.ui.priority.setVisible(False)
@@ -62,8 +64,13 @@ class AccountManager(qtw.QMainWindow):
         """
         Log the user in and verify their information.
         """
-        print("Logging in...")
-        self.is_logged_in = True
+
+        global_vars.LOGGED_IN = True
+
+        password = hashlib.md5(self.ui.password.text().encode("UTF-8")).hexdigest()
+        email = self.ui.email_in.text()
+        self.ui.email_in.setText("")
+
         self.display_widgets()
 
     def logout(self):
@@ -71,3 +78,5 @@ class AccountManager(qtw.QMainWindow):
         Log the user out if they are already logged in.
         """
         print("Logging out...")
+        global_vars.LOGGED_IN = False
+        self.display_widgets()

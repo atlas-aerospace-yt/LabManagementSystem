@@ -103,12 +103,18 @@ QPushButton::pressed {
        </spacer>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="email_in">
+       <widget class="QLineEdit" name="password">
         <property name="minimumSize">
          <size>
           <width>0</width>
           <height>50</height>
          </size>
+        </property>
+        <property name="echoMode">
+         <enum>QLineEdit::Password</enum>
+        </property>
+        <property name="placeholderText">
+         <string>Enter password here.</string>
         </property>
        </widget>
       </item>
@@ -134,7 +140,7 @@ QPushButton::pressed {
          </size>
         </property>
         <property name="text">
-         <string>Bob Ross</string>
+         <string/>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -155,12 +161,15 @@ QPushButton::pressed {
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QLineEdit" name="name_in">
+       <widget class="QLineEdit" name="email_in">
         <property name="minimumSize">
          <size>
           <width>0</width>
           <height>50</height>
          </size>
+        </property>
+        <property name="placeholderText">
+         <string>Enter email here.</string>
         </property>
        </widget>
       </item>
@@ -186,7 +195,7 @@ QPushButton::pressed {
          </size>
         </property>
         <property name="text">
-         <string>b-ross17@st-bernards.com</string>
+         <string/>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -202,7 +211,7 @@ QPushButton::pressed {
          </size>
         </property>
         <property name="text">
-         <string>1</string>
+         <string/>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
