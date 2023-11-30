@@ -16,12 +16,15 @@ class AccountManager(qtw.QMainWindow):
     account management window.
     """
 
-    def __init__(self, parent=None):
+    def __init__(self, connection_manager, parent=None):
         super().__init__(parent=parent)
 
         self.name = ""
         self.email = ""
         self.priority = 0
+
+        self.user_data = connection_manager.send_command(
+            "SELECT Email, PasswordHash FROM USERS")
 
         self.ui = account_window()
         self.ui.setupUi(self)
@@ -29,6 +32,7 @@ class AccountManager(qtw.QMainWindow):
         self.connect_buttons()
         self.display_widgets()
 
+        self.setFixedSize(400, 300)
         self.show()
 
     def connect_buttons(self):
@@ -43,40 +47,33 @@ class AccountManager(qtw.QMainWindow):
         Only show the correct widgets whether the user is logged in or
         not logged in.
         """
-        if global_vars.LOGGED_IN:
-            self.ui.email_in.setVisible(False)
-            self.ui.password.setVisible(False)
-            self.ui.login.setVisible(False)
-            self.ui.logout.setVisible(True)
-            self.ui.priority.setVisible(True)
-            self.ui.name.setVisible(True)
-            self.ui.email.setVisible(True)
-        else:
-            self.ui.email_in.setVisible(True)
-            self.ui.password.setVisible(True)
-            self.ui.login.setVisible(True)
-            self.ui.logout.setVisible(False)
-            self.ui.priority.setVisible(False)
-            self.ui.name.setVisible(False)
-            self.ui.email.setVisible(False)
+        self.ui.email_in.setVisible(not global_vars.LOGGED_IN)
+        self.ui.password.setVisible(not global_vars.LOGGED_IN)
+        self.ui.login.setVisible(not global_vars.LOGGED_IN)
+        self.ui.logout.setVisible(global_vars.LOGGED_IN)
+        self.ui.priority.setVisible(global_vars.LOGGED_IN)
+        self.ui.name.setVisible(global_vars.LOGGED_IN)
+        self.ui.email.setVisible(global_vars.LOGGED_IN)
 
     def login(self):
         """
         Log the user in and verify their information.
         """
 
-        global_vars.LOGGED_IN = True
-
         password = hashlib.md5(self.ui.password.text().encode("UTF-8")).hexdigest()
         email = self.ui.email_in.text()
+
+        for user in self.user_data:
+            if user[0] == email and user[1] == password:
+                global_vars.LOGGED_IN = True
+                self.display_widgets()
+
         self.ui.email_in.setText("")
 
-        self.display_widgets()
 
     def logout(self):
         """
         Log the user out if they are already logged in.
         """
-        print("Logging out...")
         global_vars.LOGGED_IN = False
         self.display_widgets()

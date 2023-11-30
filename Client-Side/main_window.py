@@ -212,7 +212,7 @@ class MainUI(qtw.QMainWindow):
         """
         Open the account window so that the user can manage their account.
         """
-        AccountManager(self)
+        AccountManager(self.connection_manager, self)
 
     def test(self):
         """
