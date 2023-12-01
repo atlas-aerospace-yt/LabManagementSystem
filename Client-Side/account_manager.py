@@ -41,25 +41,34 @@ class AccountManager(qtw.QMainWindow):
         self.ui.login.clicked.connect(self.login)
         self.ui.logout.clicked.connect(self.logout)
 
-    def display_widgets(self, email=""):
+    def display_text(self):
         """
-        Only show the correct widgets whether the user is logged in or
-        not logged in.
+        Display the relevant text in the relevant boxes for the user
+        to view their information.
         """
-
         if global_vars.LOGGED_IN:
             user_display_info = global_vars.CONNECTION_MANAGER.send_command(
                 f"SELECT Forename, Surname, Priority, UserID\
-                  FROM USERS WHERE Email=\"{email}\"")[0]
+                  FROM USERS WHERE Email=\"{global_vars.USER_EMAIL}\"")
+            print(user_display_info)
+            user_display_info=user_display_info[0]
             global_vars.PRIORITY = user_display_info[2]
             global_vars.USER_ID = user_display_info[3]
             self.ui.name.setText(f"{user_display_info[1]}, {user_display_info[0]}")
-            self.ui.email.setText(email)
+            self.ui.email.setText(global_vars.USER_EMAIL)
             self.ui.priority.setText(f"Priority: {global_vars.PRIORITY}")
         else:
             self.ui.name.setText("")
             self.ui.email.setText("")
             self.ui.priority.setText("")
+
+    def display_widgets(self):
+        """
+        Only show the correct widgets whether the user is logged in or
+        not logged in.
+        """
+
+        self.display_text()
 
         self.ui.email_in.setVisible(not global_vars.LOGGED_IN)
         self.ui.password.setVisible(not global_vars.LOGGED_IN)
@@ -80,8 +89,9 @@ class AccountManager(qtw.QMainWindow):
         for user in self.user_data:
             if user[0] == email and user[1] == password:
                 global_vars.LOGGED_IN = True
+                global_vars.USER_EMAIL = email
                 self.ui.password.setText("")
-                self.display_widgets(user[0])
+                self.display_widgets()
 
         self.ui.email_in.setText("")
 

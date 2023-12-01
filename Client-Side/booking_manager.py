@@ -19,6 +19,10 @@ class BookingManager(qtw.QMainWindow):
     """
 
     def __init__(self, time, date, labs, parent=None):
+
+        if not global_vars.LOGGED_IN or global_vars.PRIORITY == 0:
+            return
+
         super().__init__(parent=parent)
 
         self.time = time
@@ -30,6 +34,7 @@ class BookingManager(qtw.QMainWindow):
         # Fill in the QComboBoxes
         stock = global_vars.CONNECTION_MANAGER.send_command(
             "SELECT StockID, Name, Amount FROM STOCK")
+
         for stock_item in stock:
             self.ui.stock.addItem(stock_item[1])
 
