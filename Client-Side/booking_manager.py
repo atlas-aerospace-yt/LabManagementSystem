@@ -4,6 +4,8 @@ This file holds the BookingManager class.
 TODO -> all functions that say "pass".
 """
 
+import global_vars
+
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtWidgets as qtw
 
@@ -16,10 +18,8 @@ class BookingManager(qtw.QMainWindow):
     This class handles all interactions with the booking manager.
     """
 
-    def __init__(self, connection_manager, time, date, labs, parent=None):
+    def __init__(self, time, date, labs, parent=None):
         super().__init__(parent=parent)
-
-        self.connection_manager = connection_manager
 
         self.time = time
         self.date = date
@@ -28,7 +28,8 @@ class BookingManager(qtw.QMainWindow):
         self.ui.setupUi(self)
 
         # Fill in the QComboBoxes
-        stock = self.connection_manager.send_command("SELECT StockID, Name, Amount FROM STOCK")
+        stock = global_vars.CONNECTION_MANAGER.send_command(
+            "SELECT StockID, Name, Amount FROM STOCK")
         for stock_item in stock:
             self.ui.stock.addItem(stock_item[1])
 

@@ -3,6 +3,8 @@ This file holds the class which runs the home screen for the
 Lab Management system.
 """
 
+import global_vars
+
 from datetime import datetime, timedelta
 
 from PyQt5 import QtCore as qtc
@@ -21,14 +23,13 @@ class MainUI(qtw.QMainWindow):
     This class handles all user interactions with the main window.
     """
 
-    def __init__(self, connection_manager):
+    def __init__(self):
         super().__init__()
 
         self.ui = main_window()
 
         self.time_table_widgets = []
         self.bookings = {}
-        self.connection_manager = connection_manager
 
         self.ui.setupUi(self)
 
@@ -39,10 +40,10 @@ class MainUI(qtw.QMainWindow):
             self.ui.date_range.addItem((last_monday + timedelta(weeks=i)).strftime("%d-%m-%Y"))
 
         # Get all of the bookable labs
-        self.labs = self.connection_manager.send_command(sql.GET_LABS)
+        self.labs = global_vars.CONNECTION_MANAGER.send_command(sql.GET_LABS)
 
         # Get all of the time slots
-        self.times = self.connection_manager.send_command("SELECT * FROM TIMETABLE")
+        self.times = global_vars.CONNECTION_MANAGER.send_command("SELECT * FROM TIMETABLE")
 
         self.connect_buttons()
         self.fill_in_timetable()
@@ -131,7 +132,7 @@ class MainUI(qtw.QMainWindow):
         """
 
         # A list which has Forename, Surname, Subject, date, starttime, endtime
-        timetable = self.connection_manager.send_command(sql.GET_BOOKINGS_INFO)
+        timetable = global_vars.CONNECTION_MANAGER.send_command(sql.GET_BOOKINGS_INFO)
 
         # Get a list of dates of the week
         this_monday = datetime.strptime(self.ui.date_range.currentText(), "%d-%m-%Y")
@@ -192,15 +193,13 @@ class MainUI(qtw.QMainWindow):
 
         if 1 <= i <= len(self.time_table_widgets) and 1 <= j <= len(self.time_table_widgets[0]):
             if (i,j) not in self.bookings:
-                BookingManager(
-                    self.connection_manager, self.times[i-1], date_range[j-1], self.labs, self)
+                BookingManager(self.times[i-1], date_range[j-1], self.labs, self)
             elif len(self.bookings[(i,j)][1]) != len(self.labs):
                 labs = []
                 for lab in self.labs:
                     if lab[1] not in self.bookings[(i, j)][1]:
                         labs.append(lab)
-                BookingManager(
-                    self.connection_manager, self.times[i-1], date_range[j-1], labs, self)
+                BookingManager(self.times[i-1], date_range[j-1], labs, self)
 
     def open_graph_window(self):
         """
@@ -212,7 +211,7 @@ class MainUI(qtw.QMainWindow):
         """
         Open the account window so that the user can manage their account.
         """
-        AccountManager(self.connection_manager, self)
+        AccountManager(self)
 
     def test(self):
         """

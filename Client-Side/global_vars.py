@@ -2,6 +2,9 @@
 Global variables that can change are defined here.
 """
 
-USER_NAME = None
-PASSWORD = None
+CONNECTION_MANAGER = None
+
+USER_ID = None
 LOGGED_IN = False
+
+PRIORITY = -1

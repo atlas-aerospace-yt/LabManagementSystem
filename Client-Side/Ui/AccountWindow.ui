@@ -53,8 +53,6 @@ QLabel {
 	border-radius: 20px;
 	padding-left:10px; 
 	background-color: #FFFFFF;
-	color: #fc7303;
-	font-size: 30px;
 }
 
 /* Button styling */

@@ -54,8 +54,6 @@ class Ui_AccountWindow(object):
 "    border-radius: 20px;\n"
 "    padding-left:10px; \n"
 "    background-color: #FFFFFF;\n"
-"    color: #fc7303;\n"
-"    font-size: 30px;\n"
 "}\n"
 "\n"
 "/* Button styling */\n"
