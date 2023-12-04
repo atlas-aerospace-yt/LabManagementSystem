@@ -191,7 +191,12 @@ class MainUI(qtw.QMainWindow):
         for day in range(7):
             date_range.append((this_monday + timedelta(days=day)).strftime("%d-%m-%Y"))
 
-        if 1 <= i <= len(self.time_table_widgets) and 1 <= j <= len(self.time_table_widgets[0]):
+        days_into_week = (datetime.now()-this_monday).days + 1
+
+        valid_time = 1 <= i <= len(self.time_table_widgets)
+        valid_day = days_into_week < j <= len(self.time_table_widgets[0])
+
+        if valid_time and valid_day:
             if (i,j) not in self.bookings:
                 BookingManager(self.times[i-1], date_range[j-1], self.labs, self)
             elif len(self.bookings[(i,j)][1]) != len(self.labs):
