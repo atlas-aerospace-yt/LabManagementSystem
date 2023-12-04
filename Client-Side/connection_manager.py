@@ -91,7 +91,7 @@ class ConnectionManager:
 
         result = self.data
         self.data = None
-
+        print(result)
         return self.parse_result(result)
 
     def end_connection(self):

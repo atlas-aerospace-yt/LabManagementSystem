@@ -58,6 +58,7 @@ class Connection:
         Args:
             data(str): the data that is to be sent to the client side
         """
+        print(data)
         data = data.encode("utf-8")
         self.socket.send(data)
 
