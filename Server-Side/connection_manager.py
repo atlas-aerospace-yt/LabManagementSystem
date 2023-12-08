@@ -59,7 +59,6 @@ class Connection:
             data(str): the data that is to be sent to the client side
         """
         data = (data + "\r\n").encode("utf-8")
-        print(data.decode("UTF-8"))
         self.socket.send(data)
 
     def disconnect(self):

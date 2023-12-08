@@ -14,7 +14,6 @@ from connection_manager import ConnectionManager
 from main_window import MainUI
 
 # This if statement makes sure that the program
-# is not run when someone accidentally imports this
 # file as a library.
 if __name__ == "__main__":
 

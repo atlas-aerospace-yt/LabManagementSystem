@@ -38,19 +38,18 @@ class ConnectionManager:
             try:
                 request = b""
 
-                while True:
+                while self.running:
                     data = self.server.recv(1024)
                     request += data
                     if "\r\n" in request.decode("utf-8"):
                         break
-
-                request = request.decode("utf-8")
+                request = request.decode("utf-8").split("\r\n")[0]
 
             except (ConnectionResetError, ConnectionAbortedError):
                 break
             if request.lower() == "closed":
                 break
-            self.data = request.split("\r\n")[0]
+            self.data = request
 
         self.server.close()
         self.running = False
@@ -105,7 +104,8 @@ class ConnectionManager:
         """
         Close the connection between the server side and client side.
         """
-        self.server.send("close".encode("UTF-8"))
+        self.running = False
+        self.server.send("close\r\n".encode("UTF-8"))
         # Wait for the server to respond.
         while self.running:
             pass

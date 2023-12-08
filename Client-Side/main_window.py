@@ -133,7 +133,7 @@ class MainUI(qtw.QMainWindow):
 
         # A list which has Forename, Surname, Subject, date, starttime, endtime
         timetable = global_vars.CONNECTION_MANAGER.send_command(sql.GET_BOOKINGS_INFO)
-        print(timetable)
+
         # Get a list of dates of the week
         this_monday = datetime.strptime(self.ui.date_range.currentText(), "%d-%m-%Y")
         date_range = []
@@ -155,7 +155,6 @@ class MainUI(qtw.QMainWindow):
             if booking[3] in date_range:
                 j = 1 + date_range.index(booking[3])
             else:
-                print(booking[3], date_range)
                 continue
 
             if (i,j) in self.bookings:
