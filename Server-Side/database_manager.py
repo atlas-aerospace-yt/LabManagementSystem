@@ -97,4 +97,5 @@ if __name__ == "__main__":
     print(my_database.send_command("SELECT * FROM BOOKED_STOCK"))
     print(my_database.send_command("SELECT * FROM INSTITUTION"))
     print(my_database.send_command("SELECT * FROM TIMETABLE"))
+
     my_database.end_connection()

@@ -36,13 +36,21 @@ class ConnectionManager:
             # This prevents connection problems to one client from crashing
             # the whole server side program.
             try:
-                request = self.server.recv(1024)
+                request = b""
+
+                while True:
+                    data = self.server.recv(1024)
+                    request += data
+                    if "\r\n" in request.decode("utf-8"):
+                        break
+
                 request = request.decode("utf-8")
+
             except (ConnectionResetError, ConnectionAbortedError):
                 break
             if request.lower() == "closed":
                 break
-            self.data = request
+            self.data = request.split("\r\n")[0]
 
         self.server.close()
         self.running = False
@@ -91,7 +99,6 @@ class ConnectionManager:
 
         result = self.data
         self.data = None
-        print(result)
         return self.parse_result(result)
 
     def end_connection(self):
