@@ -124,7 +124,7 @@ class MainUI(qtw.QMainWindow):
                     self.add_widget_to_timetable(
                         f"{self.times[i-1][1]}-{self.times[i-1][2]}", (i, j), gui.TITLE_CSS)
                 else:
-                    self.add_widget_to_timetable("", (i, j), gui.STANDARD_CSS, True)
+                    self.add_widget_to_timetable("", (i, j), gui.PLAIN_CSS, True)
 
     def update_display(self):
         """

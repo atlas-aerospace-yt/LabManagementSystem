@@ -25,14 +25,6 @@ TITLE_CSS = """
     border-radius: 10px;
 }"""
 
-STANDARD_CSS = """
-*{
-    text-align: center;
-    background-color: #ffffff;
-    border: none;
-    border-radius: 10px;
-}"""
-
 FULL_CSS = """
 *{
     text-align: center;
@@ -60,5 +52,9 @@ PLAIN_CSS = """
 # Booking definitions
 BOOKING_TITLE_BEGINNING = "<h1><p style=\"color:#fc7303\">Booking for "
 BOOKING_TITLE_ENDING = "</p></h1>"
+
+BOOKING_ERROR_BEGINNING = "<h3><p style=\"color:#fc7303\">"
+BOOKING_ERROR_ENDING = "</p></h3>"
+
 BOOKING_MSG_BEGINNING = "<p style=\"color:#fc7303\">>>> <font color=\"#000000\">"
 BOOKING_MSG_ENDING = "</P>"

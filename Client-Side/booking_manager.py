@@ -28,6 +28,9 @@ class BookingManager(qtw.QMainWindow):
         self.time = time
         self.date = date
 
+        self.stock = []
+        self.error = None
+
         self.ui = booking_window()
         self.ui.setupUi(self)
 
@@ -65,16 +68,53 @@ class BookingManager(qtw.QMainWindow):
         so the user can see all information.
         """
         html = gui.BOOKING_TITLE_BEGINNING
-        html += f"{self.date} at {self.time[1]}-{self.time[2]}"
-        html += gui.BOOKING_MSG_ENDING
+        html += f"{self.date} at {self.time[1]}-{self.time[2]} in {self.ui.lab.currentText()}"
+        html += gui.BOOKING_TITLE_ENDING
+
+        if self.error:
+            html += gui.BOOKING_ERROR_BEGINNING
+            html += f"Invalid stock amount: \"{self.error}\""
+            html += gui.BOOKING_ERROR_ENDING
+
+        for stock in self.stock:
+            html += gui.BOOKING_MSG_BEGINNING
+            html += f"Booked {stock[1]} of {stock[0]}"
+            html += gui.BOOKING_MSG_ENDING
 
         self.ui.booking_info.setHtml(html)
 
     def add_stock(self):
         """
-        Add a stock item to the booking widget.
+        Add a stock item to the booking widget. This verifies the input has entered an integer
+        amount that is positive and less than the maximum amount of stock available. This is
+        then stored in the self.stock list to be used when the booking is committed.
         """
-        print("Adding stock...")
+        already_booked = False
+
+        amount = self.ui.stock_amount.text()
+        stock_item = self.ui.stock.currentText()
+
+        max_amount = int(global_vars.CONNECTION_MANAGER.send_command(
+            f"SELECT Amount FROM STOCK WHERE Name=\"{stock_item}\"")[0][0])
+
+        if amount.isnumeric() and int(amount) <= max_amount:
+
+            for i, stock in enumerate(self.stock):
+                if stock[0] == stock_item:
+                    if amount == "0":
+                        del self.stock[i]
+                    else:
+                        self.stock[i][1] = amount
+                    already_booked = True
+                    continue
+
+            if not already_booked and amount != "0":
+                self.stock.append([stock_item, amount])
+
+            self.ui.stock_amount.setText("")
+            self.error = None
+        else:
+            self.error = amount
 
     def commit_booking(self):
         """
