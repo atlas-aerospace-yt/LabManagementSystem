@@ -73,7 +73,7 @@ class ConnectionManager:
             output.append([])
             for data_point in data_record.split(", "):
                 if data_point.endswith(","):
-                    data_point = data_point[0:-1]
+                    output[i].append(data_point[0:-1])
                 elif data_point.startswith("'") and data_point.endswith("'"):
                     output[i].append(data_point.replace("'",""))
                 elif data_point.isnumeric():
@@ -97,6 +97,7 @@ class ConnectionManager:
             pass
 
         result = self.data
+        print(result)
         self.data = None
         return self.parse_result(result)
 
