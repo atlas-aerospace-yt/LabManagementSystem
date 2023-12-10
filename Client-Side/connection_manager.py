@@ -68,8 +68,7 @@ class ConnectionManager:
         data_list = data.split("\n")[1:-1]
 
         for i, data_record in enumerate(data_list):
-            data_record = data_record.replace("(", "")
-            data_record = data_record.replace(")", "")
+            data_record = data_record[1:-1]
             output.append([])
             for data_point in data_record.split(", "):
                 if data_point.endswith(","):
@@ -97,7 +96,6 @@ class ConnectionManager:
             pass
 
         result = self.data
-        print(result)
         self.data = None
         return self.parse_result(result)
 
