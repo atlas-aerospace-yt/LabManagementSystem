@@ -50,7 +50,7 @@ class AccountManager(qtw.QMainWindow):
             user_display_info = global_vars.CONNECTION_MANAGER.send_command(
                 f"SELECT Forename, Surname, Priority, UserID\
                   FROM USERS WHERE Email=\"{global_vars.USER_EMAIL}\"")
-            print(user_display_info)
+
             user_display_info=user_display_info[0]
             global_vars.PRIORITY = user_display_info[2]
             global_vars.USER_ID = user_display_info[3]

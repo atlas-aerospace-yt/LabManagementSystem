@@ -131,7 +131,7 @@ class Ui_AccountWindow(object):
 
     def retranslateUi(self, AccountWindow):
         _translate = QtCore.QCoreApplication.translate
-        AccountWindow.setWindowTitle(_translate("AccountWindow", "MainWindow"))
+        AccountWindow.setWindowTitle(_translate("AccountWindow", "Account Manager"))
         self.login.setText(_translate("AccountWindow", "Log In"))
         self.password.setPlaceholderText(_translate("AccountWindow", "Enter password here."))
         self.logout.setText(_translate("AccountWindow", "Log Out"))

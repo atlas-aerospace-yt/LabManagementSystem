@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Account Manager</string>
   </property>
   <property name="styleSheet">
    <string notr="true">/*General Styling*/
