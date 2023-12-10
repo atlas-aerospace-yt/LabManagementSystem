@@ -129,16 +129,23 @@ class MainUI(qtw.QMainWindow):
     def update_display(self):
         """
         Get the data from the database and display the booked slots.
+        To speed up the application, only the dates between the date range are selected from
+        the database, the code for this was from:
+        https://stackoverflow.com/questions/14208958/select-data-from-date-range-between-two-dates.
         """
-
-        # A list which has Forename, Surname, Subject, date, starttime, endtime
-        timetable = global_vars.CONNECTION_MANAGER.send_command(sql.GET_BOOKINGS_INFO)
 
         # Get a list of dates of the week
         this_monday = datetime.strptime(self.ui.date_range.currentText(), "%d-%m-%Y")
         date_range = []
         for i in range(7):
             date_range.append((this_monday + timedelta(days=i)).strftime("%d-%m-%Y"))
+
+        # A list which has Forename, Surname, Subject, Date, StartTime, EndTime
+        condition = f" WHERE (Date BETWEEN \"{date_range[0]}\" AND \"{date_range[-1]}\")"
+        timetable = global_vars.CONNECTION_MANAGER.send_command(sql.GET_BOOKINGS_INFO + condition)
+
+        if timetable is None:
+            timetable = []
 
         # Get the list of times that are being displayed
         times = []
