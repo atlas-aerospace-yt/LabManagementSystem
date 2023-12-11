@@ -135,7 +135,7 @@ class BookingManager(qtw.QMainWindow):
                 used_id += 1
         return 0
 
-    def get_lab_id(self):
+    def get_lab_id(self): # pylint: disable=inconsistent-return-statements
         """
         Find out which lab is selected for the booking and then get the lab ID from
         the database so that the booking can be made.
@@ -148,7 +148,7 @@ class BookingManager(qtw.QMainWindow):
         # are valid.
         for lab in self.labs:
             if lab[1] == self.ui.lab.currentText():
-                return lab[0] # pylint: disable=inconsistent-return-statements
+                return lab[0]
 
     def get_stock_items(self):
         """
