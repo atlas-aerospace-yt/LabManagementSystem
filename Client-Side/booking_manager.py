@@ -164,6 +164,13 @@ class BookingManager(qtw.QMainWindow):
                 f"SELECT * FROM STOCK WHERE Name=\"{stock_item[0]}\"")[0][0], stock_item[1]])
         return stock
 
+    def update_available_stock(self):
+        """
+        Decrease the amount of available stock by the amount of stock that has been booked.
+        """
+        for stock in self.stock:
+            print(f"UPDATE STOCK SET Amount = Amount={stock[1]} WHERE Name=\"{stock[0]}\"")
+
     def commit_booking(self):
         """
         Commit the booking to the database.
@@ -188,3 +195,5 @@ class BookingManager(qtw.QMainWindow):
         global_vars.CONNECTION_MANAGER.send_command(create_booking)
         for stock in stock_bookings:
             global_vars.CONNECTION_MANAGER.send_command(stock)
+
+        self.update_available_stock()
