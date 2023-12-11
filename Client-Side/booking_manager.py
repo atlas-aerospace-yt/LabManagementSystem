@@ -143,9 +143,12 @@ class BookingManager(qtw.QMainWindow):
         Returns:
             int: the lab ID from the database.
         """
+        # The reason for there being no catch all for the return and is condinitional is because
+        # the condition will always be met as the option is from a drop down and all of the options
+        # are valid.
         for lab in self.labs:
             if lab[1] == self.ui.lab.currentText():
-                return lab[0]
+                return lab[0] # pylint: disable=inconsistent-return-statements
 
     def get_stock_items(self):
         """
