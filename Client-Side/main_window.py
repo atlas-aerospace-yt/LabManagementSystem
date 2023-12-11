@@ -126,12 +126,17 @@ class MainUI(qtw.QMainWindow):
                 else:
                     self.add_widget_to_timetable("", (i, j), gui.PLAIN_CSS, True)
 
-    def update_display(self):
+    def get_data_to_update_display(self):
         """
         Get the data from the database and display the booked slots.
         To speed up the application, only the dates between the date range are selected from
         the database, the code for this was from:
         https://stackoverflow.com/questions/14208958/select-data-from-date-range-between-two-dates.
+
+        Returns:
+            list: The times shown on the timetable.
+            list: The bookings that are in the database.
+            list: The date range that is currently being displayed.
         """
 
         # Get a list of dates of the week
@@ -152,6 +157,19 @@ class MainUI(qtw.QMainWindow):
         for widget_list in self.time_table_widgets:
             times.append(widget_list[0].text())
         times.pop(0)
+
+        return times, timetable, date_range
+
+    def update_display(self):
+        """
+        Show all of the bookings on the timetable for the user to interact with.
+        This works by first getting the time, timetable and daterange. Then bookings
+        are added to a bookings dictionary which holds the names of the bookings and the
+        lab which the booking is in. The co-ordinate of the booking on the timetable is
+        the key for that dictionary item.
+        """
+
+        times, timetable, date_range = self.get_data_to_update_display()
 
         # Parse the bookings to add to the timetable
         self.bookings = {}
