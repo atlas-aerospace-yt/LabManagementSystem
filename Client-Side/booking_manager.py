@@ -138,9 +138,8 @@ class BookingManager(qtw.QMainWindow):
         Commit the booking to the database.
         """
         booking_id = self.get_booking_id()
-        stock_id = []
+        time_id = self.time[0]
+        stock_ids = []
         for stock in self.stock:
-            stock_id.append(global_vars.CONNECTION_MANAGER.send_command(
+            stock_ids.append(global_vars.CONNECTION_MANAGER.send_command(
                 f"SELECT * FROM STOCK WHERE Name=\"{stock[0]}\"")[0][0])
-        time_id = self.time
-        print(time_id)
