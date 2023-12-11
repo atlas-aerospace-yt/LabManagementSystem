@@ -27,6 +27,7 @@ class BookingManager(qtw.QMainWindow):
 
         self.time = time
         self.date = date
+        self.labs = labs
 
         self.stock = []
         self.error = None
@@ -41,7 +42,7 @@ class BookingManager(qtw.QMainWindow):
         for stock_item in stock:
             self.ui.stock.addItem(stock_item[1])
 
-        for lab in labs:
+        for lab in self.labs:
             self.ui.lab.addItem(lab[1])
 
         self.connect_buttons()
@@ -129,17 +130,58 @@ class BookingManager(qtw.QMainWindow):
         used_id = ordered_ids[0]
         if used_id == 0:
             for booking_id in ordered_ids[1:]:
-                if used_id != booking_id+1:
-                    return booking_id+1
+                if used_id+1 != booking_id:
+                    return used_id+1
+                used_id += 1
         return 0
+
+    def get_lab_id(self):
+        """
+        Find out which lab is selected for the booking and then get the lab ID from
+        the database so that the booking can be made.
+        
+        Returns:
+            int: the lab ID from the database.
+        """
+        for lab in self.labs:
+            if lab[1] == self.ui.lab.currentText():
+                return lab[0]
+
+    def get_stock_items(self):
+        """
+        Find out which stock items have been booked and place the stock ID and amount
+        into a singular list for processing.
+        
+        Returns:
+            list: A 2D list with stock ID and amount.
+        """
+        stock = []
+        for stock_item in self.stock:
+            stock.append([global_vars.CONNECTION_MANAGER.send_command(
+                f"SELECT * FROM STOCK WHERE Name=\"{stock_item[0]}\"")[0][0], stock_item[1]])
+        return stock
 
     def commit_booking(self):
         """
         Commit the booking to the database.
         """
-        booking_id = self.get_booking_id()
         time_id = self.time[0]
-        stock_ids = []
-        for stock in self.stock:
-            stock_ids.append(global_vars.CONNECTION_MANAGER.send_command(
-                f"SELECT * FROM STOCK WHERE Name=\"{stock[0]}\"")[0][0])
+        booking_id = self.get_booking_id()
+        lab_id = self.get_lab_id()
+        stock = self.get_stock_items()
+
+        self.close()
+
+        # The create booking string needs to be broken into two linesn as it is too long.
+        create_booking = f"INSERT INTO BOOKINGS VALUES(\
+{booking_id}, {global_vars.USER_ID}, {lab_id}, {time_id}, \"{self.date}\")"
+
+        stock_bookings = []
+        for stock_item in stock:
+            stock_bookings.append(
+                f"INSERT INTO BOOKED_STOCK VALUES ({booking_id}, {stock_item[0]}, {stock_item[1]})")
+
+        # Commit the data to the server-side (THIS CANNOT BE UNDONE)
+        global_vars.CONNECTION_MANAGER.send_command(create_booking)
+        for stock in stock_bookings:
+            global_vars.CONNECTION_MANAGER.send_command(stock)
