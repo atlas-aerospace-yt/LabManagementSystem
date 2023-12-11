@@ -116,8 +116,31 @@ class BookingManager(qtw.QMainWindow):
         else:
             self.error = amount
 
+    def get_booking_id(self):
+        """
+        Get the first available booking ID that can be used to make a booking.
+
+        Returns:
+            int: the first available booking ID
+        """
+        booking_ids = global_vars.CONNECTION_MANAGER.send_command(
+                            "SELECT BookingID FROM BOOKINGS")
+        ordered_ids = sorted([int(i[0]) for i in booking_ids])
+        used_id = ordered_ids[0]
+        if used_id == 0:
+            for booking_id in ordered_ids[1:]:
+                if used_id != booking_id+1:
+                    return booking_id+1
+        return 0
+
     def commit_booking(self):
         """
         Commit the booking to the database.
         """
-        print("Committing booking...")
+        booking_id = self.get_booking_id()
+        stock_id = []
+        for stock in self.stock:
+            stock_id.append(global_vars.CONNECTION_MANAGER.send_command(
+                f"SELECT * FROM STOCK WHERE Name=\"{stock[0]}\"")[0][0])
+        time_id = self.time
+        print(time_id)
