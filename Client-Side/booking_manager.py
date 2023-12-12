@@ -128,12 +128,16 @@ class BookingManager(qtw.QMainWindow):
                             "SELECT BookingID FROM BOOKINGS")
         ordered_ids = sorted([int(i[0]) for i in booking_ids])
         used_id = ordered_ids[0]
+
         if used_id == 0:
             for booking_id in ordered_ids[1:]:
                 if used_id+1 != booking_id:
+                    print(used_id+1)
                     return used_id+1
                 used_id += 1
-        return 0
+        else:
+            return 0
+        return used_id+1
 
     def get_lab_id(self): # pylint: disable=inconsistent-return-statements
         """
@@ -169,7 +173,9 @@ class BookingManager(qtw.QMainWindow):
         Decrease the amount of available stock by the amount of stock that has been booked.
         """
         for stock in self.stock:
-            print(f"UPDATE STOCK SET Amount = Amount={stock[1]} WHERE Name=\"{stock[0]}\"")
+            global_vars.CONNECTION_MANAGER.send_command(
+                f"UPDATE STOCK SET Amount=Amount-{stock[1]} WHERE Name=\"{stock[0]}\"")
+            print(f"UPDATE STOCK SET Amount=Amount-{stock[1]} WHERE Name=\"{stock[0]}\"")
 
     def commit_booking(self):
         """
