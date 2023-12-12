@@ -175,7 +175,6 @@ class BookingManager(qtw.QMainWindow):
         for stock in self.stock:
             global_vars.CONNECTION_MANAGER.send_command(
                 f"UPDATE STOCK SET Amount=Amount-{stock[1]} WHERE Name=\"{stock[0]}\"")
-            print(f"UPDATE STOCK SET Amount=Amount-{stock[1]} WHERE Name=\"{stock[0]}\"")
 
     def commit_booking(self):
         """
