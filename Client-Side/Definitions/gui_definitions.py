@@ -58,3 +58,13 @@ BOOKING_ERROR_ENDING = "</p></h3>"
 
 BOOKING_MSG_BEGINNING = "<p style=\"color:#fc7303\">>>> <font color=\"#000000\">"
 BOOKING_MSG_ENDING = "</P>"
+
+# Stock definitions
+STYLESHEET = """
+*{
+    background-color: #ffffff;
+    color: #000000;
+    border: none;
+    border-radius: 20px;
+    padding: 10px;
+}"""

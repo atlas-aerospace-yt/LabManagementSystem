@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_StockManager(object):
     def setupUi(self, StockManager):
         StockManager.setObjectName("StockManager")
-        StockManager.resize(600, 370)
+        StockManager.resize(600, 380)
         StockManager.setStyleSheet("/*General Styling*/\n"
 "\n"
 "* {\n"
@@ -130,8 +130,13 @@ class Ui_StockManager(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 383, 272))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 383, 282))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
+        self.gridLayout_4 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents)
+        self.gridLayout_4.setObjectName("gridLayout_4")
+        self.stock_view = QtWidgets.QGridLayout()
+        self.stock_view.setObjectName("stock_view")
+        self.gridLayout_4.addLayout(self.stock_view, 0, 0, 1, 1)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.gridLayout.addWidget(self.scrollArea, 2, 0, 5, 1)
         self.amount = QtWidgets.QLineEdit(self.centralwidget)
