@@ -58,6 +58,10 @@ jobs:
       run: |
         pylint ./Client-Side/graph_manager.py --disable=W0511
 
+    - name: Analysing stock_manager.py
+      run: |
+        pylint ./Client-Side/stock_manager.py --disable=W0511
+
     - name: Analysing main_window.py
       run: |
         pylint ./Client-Side/main_window.py --disable=W0511

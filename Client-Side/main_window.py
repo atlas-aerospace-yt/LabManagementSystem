@@ -3,20 +3,24 @@ This file holds the class which runs the home screen for the
 Lab Management system.
 """
 
+# Python PIP libraries see requirements.txt for more
 from datetime import datetime, timedelta
 
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtWidgets as qtw
 
+from Ui.MainWindow import Ui_MainWindow as main_window
+
+# Custom libraries go here
 import global_vars
 
 import Definitions.gui_definitions as gui
 import Definitions.sql_definitions as sql
 
-from Ui.MainWindow import Ui_MainWindow as main_window
 from graph_manager import GraphManager
 from booking_manager import BookingManager
 from account_manager import AccountManager
+from stock_manager import StockManager
 
 class MainUI(qtw.QMainWindow):
     """
@@ -62,7 +66,7 @@ class MainUI(qtw.QMainWindow):
         self.ui.account.clicked.connect(self.open_account_window)
         self.ui.help.clicked.connect(self.test)
         self.ui.log_experiment.clicked.connect(self.open_graph_window)
-        self.ui.manage_stock.clicked.connect(self.test)
+        self.ui.manage_stock.clicked.connect(self.open_stock_window)
         self.ui.date_range.activated[str].connect(self.update_display)
 
     def add_widget_to_timetable(self, text, pos, stylesheet="", scale=False):
@@ -242,6 +246,12 @@ class MainUI(qtw.QMainWindow):
         Open the account window so that the user can manage their account.
         """
         AccountManager(self)
+
+    def open_stock_window(self):
+        """
+        Open the stock window so that the user can manage the stock.
+        """
+        StockManager(self)
 
     def test(self):
         """
