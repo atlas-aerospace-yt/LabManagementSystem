@@ -1,7 +1,5 @@
 """
 This file holds the BookingManager class.
-
-TODO -> all functions that say "pass".
 """
 
 import global_vars
@@ -143,13 +141,14 @@ class BookingManager(qtw.QMainWindow):
         """
         Find out which lab is selected for the booking and then get the lab ID from
         the database so that the booking can be made.
-        
+
+        The reason for there being no catch all for the return and is condinitional is because
+        the condition will always be met as the option is from a drop down and all of the options
+        are valid.
+
         Returns:
             int: the lab ID from the database.
         """
-        # The reason for there being no catch all for the return and is condinitional is because
-        # the condition will always be met as the option is from a drop down and all of the options
-        # are valid.
         for lab in self.labs:
             if lab[1] == self.ui.lab.currentText():
                 return lab[0]
