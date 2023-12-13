@@ -68,3 +68,13 @@ STYLESHEET = """
     border-radius: 20px;
     padding: 10px;
 }"""
+
+SELECTED_STYLESHEET = """
+*{
+    background-color: #ffffff;
+    color: #000000;
+    border: 5px solid;
+	border-color: #fc7303;
+    border-radius: 20px;
+    padding: 5px;
+}"""
