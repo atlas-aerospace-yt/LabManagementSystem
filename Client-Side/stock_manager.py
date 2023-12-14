@@ -3,6 +3,8 @@ This file  contains the StockManager class which runs and controls inputs to and
 the stock management window.
 """
 
+import re
+
 import global_vars
 import Definitions.sql_definitions as sql
 import Definitions.gui_definitions as gui
@@ -52,7 +54,21 @@ class StockManager(qtw.QMainWindow):
         Display stock that is only relevant to what the user has searched for then re-update
         the stock shown on the frontend to the user.
         """
-        self.stock = []
+        search_term = self.ui.name.text().replace("\"", "")
+        search_term = re.sub(r"(?<=\d).(?=\d)", "", search_term)
+        search_term = re.sub(r"£(?=\d)", "", search_term)
+
+        if search_term == "":
+            query = sql.GET_STOCK_AND_SUPPLIER
+        else:
+            query = sql.GET_STOCK_AND_SUPPLIER + f" WHERE {sql.STOCK_AND_SUPPLIER_VARS[0]} LIKE \"%{search_term}%\" "
+            for col in sql.STOCK_AND_SUPPLIER_VARS[1:]:
+                query += f"OR {col} LIKE \"%{search_term}%\" "
+            print(query)
+        self.stock = global_vars.CONNECTION_MANAGER.send_command(query)
+
+        self.ui.name.setText("")
+
         self.fill_stock()
 
     def add_stock_button(self, string, pos=-1):

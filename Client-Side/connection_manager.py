@@ -62,8 +62,12 @@ class ConnectionManager:
         Args:
             data(str): the result from the server side
         """
-        if "syntax error" in data or "No data returned!" in data:
+        if "syntax error" in data:
+            print(data)
             return None
+        elif "No data returned!" in data:
+            return []
+
         output = []
         data_list = data.split("\n")[1:-1]
 
