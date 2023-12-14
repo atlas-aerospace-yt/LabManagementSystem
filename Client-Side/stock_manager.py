@@ -46,8 +46,9 @@ class StockManager(qtw.QMainWindow):
         """
         self.ui.add_stock.clicked.connect(self.test)
         self.ui.remove.clicked.connect(self.test)
-        self.ui.update.clicked.connect(self.test)
+        self.ui.update.clicked.connect(self.update_amount)
         self.ui.name.returnPressed.connect(self.search_for_stock)
+        self.ui.amount.returnPressed.connect(self.update_amount)
 
     def search_for_stock(self):
         """
@@ -61,13 +62,15 @@ class StockManager(qtw.QMainWindow):
         if search_term == "":
             query = sql.GET_STOCK_AND_SUPPLIER
         else:
-            query = sql.GET_STOCK_AND_SUPPLIER + f" WHERE {sql.STOCK_AND_SUPPLIER_VARS[0]} LIKE \"%{search_term}%\" "
+            query = sql.GET_STOCK_AND_SUPPLIER + f" WHERE {sql.STOCK_AND_SUPPLIER_VARS[0]}\
+LIKE \"%{search_term}%\" "
             for col in sql.STOCK_AND_SUPPLIER_VARS[1:]:
                 query += f"OR {col} LIKE \"%{search_term}%\" "
             print(query)
         self.stock = global_vars.CONNECTION_MANAGER.send_command(query)
 
         self.ui.name.setText("")
+        self.stock_widgets = []
 
         self.fill_stock()
 
@@ -129,6 +132,18 @@ Phone: {stock_item[6]}"
                 item.setStyleSheet(gui.STYLESHEET)
             self.stock_widgets[indx].setStyleSheet(gui.SELECTED_STYLESHEET)
             self.selected = indx
+
+    def update_amount(self):
+        """
+        Update the amount of stock that is stored in the database.
+        """
+        amount = self.ui.amount.text()
+
+        if not amount.isnumeric():
+            return
+
+        print(amount)
+        self.ui.amount.setText("")
 
     def test(self):
         """
