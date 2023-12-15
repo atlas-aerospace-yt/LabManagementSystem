@@ -162,7 +162,7 @@ class Ui_StockManager(object):
 
     def retranslateUi(self, StockManager):
         _translate = QtCore.QCoreApplication.translate
-        StockManager.setWindowTitle(_translate("StockManager", "MainWindow"))
+        StockManager.setWindowTitle(_translate("StockManager", "Stock Manager"))
         self.amount.setPlaceholderText(_translate("StockManager", "Enter amount"))
         self.update.setText(_translate("StockManager", "Update"))
         self.add_stock.setText(_translate("StockManager", "Add new stock item"))
