@@ -48,7 +48,7 @@ class StockManager(qtw.QMainWindow):
         to their respective functions.
         """
         self.ui.add_stock.clicked.connect(self.test)
-        self.ui.remove.clicked.connect(self.test)
+        self.ui.remove.clicked.connect(self.remove_stock)
         self.ui.update.clicked.connect(self.update_amount)
         self.ui.name.returnPressed.connect(self.search_for_stock)
         self.ui.amount.returnPressed.connect(self.update_amount)
@@ -104,7 +104,7 @@ LIKE \"%{search_term}%\" "
             if child.widget():
                 child.widget().deleteLater()
 
-        self.stock_widget = []
+        self.stock_indeces = []
 
         if len(self.stock) == 0:
             self.add_stock_button("\n\nNO STOCK\n\n")
@@ -130,23 +130,22 @@ Phone: {stock_item[7]}"
         Args:
             indx(int): the button that has been selected.
         """
-        print("trig1")
         if indx == self.selected:
             for item in self.stock_widgets:
                 item.setStyleSheet(gui.STYLESHEET)
             self.selected = -1
-            print("trig2")
         else:
             for item in self.stock_widgets:
                 item.setStyleSheet(gui.STYLESHEET)
             self.stock_widgets[indx].setStyleSheet(gui.SELECTED_STYLESHEET)
             self.selected = indx
-            print("trig3")
+
 
     def update_amount(self):
         """
         Update the amount of stock that is stored in the database.
         """
+        # Update the amount of stock
         amount = self.ui.amount.text()
         indx = self.stock_indeces[self.selected]
 
@@ -158,8 +157,37 @@ Phone: {stock_item[7]}"
 
         self.ui.amount.setText("")
 
+        # Update displayed stock.
         self.stock_widgets = []
         self.stock = global_vars.CONNECTION_MANAGER.send_command(self.last_search)
+        self.fill_stock()
+
+    def remove_stock(self):
+        """
+        Remove the stock item which is selected and make the user confirm with a QtMessageBox.
+        
+        The QMessageBox code is inspired by: https://www.geeksforgeeks.org/pyqt5-message-box/
+        """
+        # Confirm the selection with a warning window.
+        warning = qtw.QMessageBox()
+        warning.setIcon(qtw.QMessageBox.Warning)
+        warning.setText("Warning - this will delete the selected stock and cannot be undone!")
+        warning.setWindowTitle("Warning")
+        warning.setStandardButtons(qtw.QMessageBox.Ok | qtw.QMessageBox.Cancel) 
+        output = warning.exec_()
+
+        # ONLY if the click "OK" proceed.
+        if output != qtw.QMessageBox.Ok:
+            return
+
+        # Delete stock item.
+        indx = self.stock_indeces[self.selected]
+
+        global_vars.CONNECTION_MANAGER.send_command(f"DELETE FROM STOCK WHERE StockID={indx}")
+
+        # Update displayed stock.
+        self.stock_widgets = []
+        self.stock = global_vars.CONNECTION_MANAGER.send_command(sql.GET_STOCK_AND_SUPPLIER)
         self.fill_stock()
 
     def test(self):
