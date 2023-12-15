@@ -33,6 +33,7 @@ class StockManager(qtw.QMainWindow):
         self.selected = -1
         self.stock_widgets = []
         self.stock_indeces = []
+        self.last_search = sql.GET_STOCK_AND_SUPPLIER
 
         self.stock = global_vars.CONNECTION_MANAGER.send_command(sql.GET_STOCK_AND_SUPPLIER)
 
@@ -68,7 +69,8 @@ class StockManager(qtw.QMainWindow):
 LIKE \"%{search_term}%\" "
             for col in sql.STOCK_AND_SUPPLIER_VARS[1:]:
                 query += f"OR {col} LIKE \"%{search_term}%\" "
-            print(query)
+
+        self.last_search = query
         self.stock = global_vars.CONNECTION_MANAGER.send_command(query)
 
         self.ui.name.setText("")
@@ -96,6 +98,7 @@ LIKE \"%{search_term}%\" "
         This procedure fills in the frontend QScroll area with all of the current
         stock in the database.
         """
+        self.selected = -1
         while self.ui.stock_view.count():
             child = self.ui.stock_view.takeAt(0)
             if child.widget():
@@ -127,27 +130,37 @@ Phone: {stock_item[7]}"
         Args:
             indx(int): the button that has been selected.
         """
+        print("trig1")
         if indx == self.selected:
             for item in self.stock_widgets:
                 item.setStyleSheet(gui.STYLESHEET)
             self.selected = -1
+            print("trig2")
         else:
             for item in self.stock_widgets:
                 item.setStyleSheet(gui.STYLESHEET)
             self.stock_widgets[indx].setStyleSheet(gui.SELECTED_STYLESHEET)
             self.selected = indx
+            print("trig3")
 
     def update_amount(self):
         """
         Update the amount of stock that is stored in the database.
         """
         amount = self.ui.amount.text()
+        indx = self.stock_indeces[self.selected]
 
-        if not amount.isnumeric():
+        if not amount.isnumeric() or self.selected == -1:
             return
 
-        print(amount, self.stock_indeces[self.selected])
+        global_vars.CONNECTION_MANAGER.send_command(
+            f"UPDATE STOCK SET Amount={amount} WHERE StockID={indx}")
+
         self.ui.amount.setText("")
+
+        self.stock_widgets = []
+        self.stock = global_vars.CONNECTION_MANAGER.send_command(self.last_search)
+        self.fill_stock()
 
     def test(self):
         """
