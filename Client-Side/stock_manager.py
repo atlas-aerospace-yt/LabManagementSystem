@@ -32,6 +32,8 @@ class StockManager(qtw.QMainWindow):
 
         self.selected = -1
         self.stock_widgets = []
+        self.stock_indeces = []
+
         self.stock = global_vars.CONNECTION_MANAGER.send_command(sql.GET_STOCK_AND_SUPPLIER)
 
         self.fill_stock()
@@ -62,7 +64,7 @@ class StockManager(qtw.QMainWindow):
         if search_term == "":
             query = sql.GET_STOCK_AND_SUPPLIER
         else:
-            query = sql.GET_STOCK_AND_SUPPLIER + f" WHERE {sql.STOCK_AND_SUPPLIER_VARS[0]}\
+            query = sql.GET_STOCK_AND_SUPPLIER + f" WHERE {sql.STOCK_AND_SUPPLIER_VARS[0]} \
 LIKE \"%{search_term}%\" "
             for col in sql.STOCK_AND_SUPPLIER_VARS[1:]:
                 query += f"OR {col} LIKE \"%{search_term}%\" "
@@ -74,7 +76,7 @@ LIKE \"%{search_term}%\" "
 
         self.fill_stock()
 
-    def add_stock_button(self, string, pos=-1):
+    def add_stock_button(self, string, indx=None, pos=-1):
         """
         Add a new stock button to the screen to show the stock in the database.
         
@@ -82,6 +84,7 @@ LIKE \"%{search_term}%\" "
             string(str): the string to tell the user what stock is in the database
             pos(int): the index of the next button
         """
+        self.stock_indeces.append(indx)
         self.stock_widgets.append(qtw.QPushButton(string))
         self.stock_widgets[pos].setStyleSheet(gui.STYLESHEET)
         if pos != -1:
@@ -105,16 +108,17 @@ LIKE \"%{search_term}%\" "
             return
 
         for stock_item in self.stock:
+            indx = stock_item[0]
 
-            string = f"Item: {stock_item[0]}\n\
-Amount:{stock_item[1]}\n\
-Price: £{stock_item[2]/100}\n\
-From: {stock_item[3]}\n\
-Supplier: {stock_item[4]}\n\
-Email: {stock_item[5]}\n\
-Phone: {stock_item[6]}"
+            string = f"Item: {stock_item[1]}\n\
+Amount:{stock_item[2]}\n\
+Price: £{stock_item[3]/100}\n\
+From: {stock_item[4]}\n\
+Supplier: {stock_item[5]}\n\
+Email: {stock_item[6]}\n\
+Phone: {stock_item[7]}"
 
-            self.add_stock_button(string, len(self.stock_widgets))
+            self.add_stock_button(string, indx, len(self.stock_widgets))
 
     def update_selected(self, indx):
         """
@@ -142,7 +146,7 @@ Phone: {stock_item[6]}"
         if not amount.isnumeric():
             return
 
-        print(amount)
+        print(amount, self.stock_indeces[self.selected])
         self.ui.amount.setText("")
 
     def test(self):
