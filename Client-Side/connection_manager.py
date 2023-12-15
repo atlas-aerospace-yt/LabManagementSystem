@@ -63,9 +63,8 @@ class ConnectionManager:
             data(str): the result from the server side
         """
         if "syntax error" in data:
-            print(data)
             return None
-        elif "No data returned!" in data:
+        if "No data returned!" in data:
             return []
 
         output = []
