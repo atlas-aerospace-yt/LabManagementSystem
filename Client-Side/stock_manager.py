@@ -149,11 +149,11 @@ class StockManager(qtw.QMainWindow):
         if search_term == "":
             self.update_stock()
             return
-        else:
-            query = sql.GET_STOCK_AND_SUPPLIER + f" WHERE {sql.STOCK_AND_SUPPLIER_VARS[0]} \
+        
+        query = sql.GET_STOCK_AND_SUPPLIER + f" WHERE {sql.STOCK_AND_SUPPLIER_VARS[0]} \
 LIKE \"%{search_term}%\" "
-            for col in sql.STOCK_AND_SUPPLIER_VARS[1:]:
-                query += f"OR {col} LIKE \"%{search_term}%\" "
+        for col in sql.STOCK_AND_SUPPLIER_VARS[1:]:
+            query += f"OR {col} LIKE \"%{search_term}%\" "
 
         self.last_search = query
         self.stock = global_vars.CONNECTION_MANAGER.send_command(query)
