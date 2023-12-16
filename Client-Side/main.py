@@ -21,6 +21,7 @@ if __name__ == "__main__":
                                         "Startup Error", 
                                         "Could not connect to the server!",
                                         qtw.QMessageBox.Cancel)
+        sys.exit()
 
     # Only import the UI once a connection is established
     from main_window import MainUI
