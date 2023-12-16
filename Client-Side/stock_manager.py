@@ -1,6 +1,7 @@
 """
 This file  contains the StockManager class which runs and controls inputs to and from
-the stock management window.
+the stock management window. It also holds the AddingStock class which the StockManager
+uses when the user adds a new stock item.
 """
 
 import re
@@ -12,8 +13,53 @@ import Definitions.gui_definitions as gui
 from PyQt5 import QtWidgets as qtw
 
 from Ui.StockWindow import Ui_StockManager as stock_window
+from Ui.AddStockWindow import Ui_AddStock as add_stock_window
 
 stock = global_vars.CONNECTION_MANAGER.send_command(sql.GET_STOCK_AND_SUPPLIER)
+
+class AddingStock(qtw.QMainWindow):
+    """
+    This class adds stock based off of the users inputs.
+    """
+
+    def __init__(self, parent=None):
+        # No condition here as they will have already opened StockManager
+        super().__init__(parent=parent)
+
+        self.ui = add_stock_window()
+        self.ui.setupUi(self)
+
+        self.connect_buttons()
+
+        self.show()
+
+    def connect_buttons(self):
+        """
+        Connect all of the buttons from the frontend of the booking manager
+        to their respective functions.
+        """
+        self.ui.addstock.clicked.connect(self.add_stock)
+
+    def add_stock(self):
+        """
+        Add the stock to the database.
+        """
+        name = self.ui.name.text()
+        amount = self.ui.amount.text()
+        price = self.ui.price.text()
+        website = self.ui.website.text()
+        supplier_name = self.ui.supplier_name.text()
+        phone = self.ui.phone.text()
+        email = self.ui.email.text()
+
+        # Check all of the data input is valid
+        if not amount.isnumeric() or not price.isnumeric():
+            return
+        if not (name and amount and price and website and supplier_name and phone and email):
+            return
+
+        # Add the stock item. TODO
+
 
 class StockManager(qtw.QMainWindow):
     """
@@ -47,7 +93,7 @@ class StockManager(qtw.QMainWindow):
         Connect all of the buttons from the frontend of the booking manager
         to their respective functions.
         """
-        self.ui.add_stock.clicked.connect(self.test)
+        self.ui.add_stock.clicked.connect(self.show_add_stock)
         self.ui.remove.clicked.connect(self.remove_stock)
         self.ui.update.clicked.connect(self.update_amount)
         self.ui.name.returnPressed.connect(self.search_for_stock)
@@ -190,8 +236,8 @@ Phone: {stock_item[7]}"
         self.stock = global_vars.CONNECTION_MANAGER.send_command(sql.GET_STOCK_AND_SUPPLIER)
         self.fill_stock()
 
-    def test(self):
+    def show_add_stock(self):
         """
-        A test function to show button clicks.
+        Allow the user to add a new stock item by opening the add stock window.
         """
-        print("Worked!")
+        AddingStock(self)
