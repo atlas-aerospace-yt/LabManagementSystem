@@ -46,6 +46,7 @@ class BookingManager(qtw.QMainWindow):
 
         self.connect_buttons()
 
+        self.setWindowModality(2)
         self.show()
 
         self.update()

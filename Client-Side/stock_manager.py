@@ -32,6 +32,7 @@ class AddingStock(qtw.QMainWindow):
 
         self.connect_buttons()
 
+        self.setWindowModality(2)
         self.show()
 
     def connect_buttons(self):
@@ -124,6 +125,7 @@ class StockManager(qtw.QMainWindow):
         self.fill_stock()
         self.connect_buttons()
 
+        self.setWindowModality(2)
         self.show()
 
     def connect_buttons(self):

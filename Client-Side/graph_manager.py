@@ -29,6 +29,7 @@ class GraphManager(qtw.QMainWindow):
         self.ui.setupUi(self)
         self.connect_buttons()
 
+        self.setWindowModality(2)
         self.show()
 
         timer = qtc.QTimer(self)

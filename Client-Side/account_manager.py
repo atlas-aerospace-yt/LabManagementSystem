@@ -32,6 +32,7 @@ class AccountManager(qtw.QMainWindow):
         self.display_widgets()
 
         self.setFixedSize(400, 300)
+        self.setWindowModality(2)
         self.show()
 
     def connect_buttons(self):
