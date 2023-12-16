@@ -21,7 +21,8 @@ class BookingManager(qtw.QMainWindow):
         if not global_vars.LOGGED_IN or global_vars.PRIORITY == 0:
             return
 
-        super().__init__(parent=parent)
+        self.parent = parent
+        super().__init__(parent=self.parent)
 
         self.time = time
         self.date = date
@@ -115,28 +116,6 @@ class BookingManager(qtw.QMainWindow):
         else:
             self.error = amount
 
-    def get_booking_id(self):
-        """
-        Get the first available booking ID that can be used to make a booking.
-
-        Returns:
-            int: the first available booking ID
-        """
-        booking_ids = global_vars.CONNECTION_MANAGER.send_command(
-                            "SELECT BookingID FROM BOOKINGS")
-        ordered_ids = sorted([int(i[0]) for i in booking_ids])
-        used_id = ordered_ids[0]
-
-        if used_id == 0:
-            for booking_id in ordered_ids[1:]:
-                if used_id+1 != booking_id:
-                    print(used_id+1)
-                    return used_id+1
-                used_id += 1
-        else:
-            return 0
-        return used_id+1
-
     def get_lab_id(self): # pylint: disable=inconsistent-return-statements
         """
         Find out which lab is selected for the booking and then get the lab ID from
@@ -180,7 +159,7 @@ class BookingManager(qtw.QMainWindow):
         Commit the booking to the database.
         """
         time_id = self.time[0]
-        booking_id = self.get_booking_id()
+        booking_id = global_vars.get_first_id("SELECT BookingID FROM BOOKINGS")
         lab_id = self.get_lab_id()
         stock = self.get_stock_items()
 
@@ -201,3 +180,6 @@ class BookingManager(qtw.QMainWindow):
             global_vars.CONNECTION_MANAGER.send_command(stock)
 
         self.update_available_stock()
+
+        # Update the parent display with the new booking
+        self.parent.update_display()
