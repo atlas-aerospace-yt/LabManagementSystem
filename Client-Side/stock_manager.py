@@ -24,7 +24,8 @@ class AddingStock(qtw.QMainWindow):
 
     def __init__(self, parent=None):
         # No condition here as they will have already opened StockManager
-        super().__init__(parent=parent)
+        self.parent = parent
+        super().__init__(parent=self.parent)
 
         self.ui = add_stock_window()
         self.ui.setupUi(self)
@@ -39,6 +40,25 @@ class AddingStock(qtw.QMainWindow):
         to their respective functions.
         """
         self.ui.addstock.clicked.connect(self.add_stock)
+
+    def create_supplier(self, name:str, phone:str, email:str) -> int:
+        """
+        Create a supplier if they do not already exist.
+
+        Args:
+            name(str): the name of the new supplier.
+            phone(str): the phone number of the new supplier.
+            email(str): the email of the new supplier.
+
+        Returns:
+            int: the primary key of the suppleir.
+        """
+        supplier_id = global_vars.get_first_id("SELECT SupplierID FROM SUPPLIER")
+
+        query = f"INSERT INTO SUPPLIER VALUES({supplier_id}, \"{name}\",\"{phone}\", \"{email}\")"
+        global_vars.CONNECTION_MANAGER.send_command(query)
+
+        return supplier_id
 
     def add_stock(self):
         """
@@ -58,7 +78,25 @@ class AddingStock(qtw.QMainWindow):
         if not (name and amount and price and website and supplier_name and phone and email):
             return
 
+        # Close the window as it is no longer needed.
+        self.close()
+
         # Add the stock item. TODO
+        supplier = global_vars.CONNECTION_MANAGER.send_command(f"SELECT * FROM SUPPLIER \
+WHERE Name LIKE \"{supplier_name}\" AND email LIKE \"{email}\" AND Phone LIKE \"{phone}\"")
+
+        if len(supplier) == 0:
+            supplier_id = self.create_supplier(supplier_name, phone, email)
+        else:
+            supplier_id = supplier[0][0]
+
+        stock_id = global_vars.get_first_id("SELECT StockID FROM STOCK")
+
+        query = f"INSERT INTO STOCK VALUES({stock_id}, \"{name}\", {amount}, {price}, \
+\"{website}\", {supplier_id})"
+        global_vars.CONNECTION_MANAGER.send_command(query)
+
+        self.parent.update_stock()
 
 
 class StockManager(qtw.QMainWindow):
@@ -109,7 +147,8 @@ class StockManager(qtw.QMainWindow):
         search_term = re.sub(r"£(?=\d)", "", search_term)
 
         if search_term == "":
-            query = sql.GET_STOCK_AND_SUPPLIER
+            self.update_stock()
+            return
         else:
             query = sql.GET_STOCK_AND_SUPPLIER + f" WHERE {sql.STOCK_AND_SUPPLIER_VARS[0]} \
 LIKE \"%{search_term}%\" "
@@ -124,7 +163,7 @@ LIKE \"%{search_term}%\" "
 
         self.fill_stock()
 
-    def add_stock_button(self, string, indx=None, pos=-1):
+    def add_stock_button(self, string:str, indx:int=None, pos:int=-1):
         """
         Add a new stock button to the screen to show the stock in the database.
         
@@ -169,7 +208,7 @@ Phone: {stock_item[7]}"
 
             self.add_stock_button(string, indx, len(self.stock_widgets))
 
-    def update_selected(self, indx):
+    def update_selected(self, indx:int):
         """
         Change the selected button.
 
@@ -204,9 +243,7 @@ Phone: {stock_item[7]}"
         self.ui.amount.setText("")
 
         # Update displayed stock.
-        self.stock_widgets = []
-        self.stock = global_vars.CONNECTION_MANAGER.send_command(self.last_search)
-        self.fill_stock()
+        self.update_stock()
 
     def remove_stock(self):
         """
@@ -231,9 +268,14 @@ Phone: {stock_item[7]}"
 
         global_vars.CONNECTION_MANAGER.send_command(f"DELETE FROM STOCK WHERE StockID={indx}")
 
-        # Update displayed stock.
+        self.update_stock()
+
+    def update_stock(self):
+        """
+        Update the self.stock atttribute so that it is consistent with the database.
+        """
         self.stock_widgets = []
-        self.stock = global_vars.CONNECTION_MANAGER.send_command(sql.GET_STOCK_AND_SUPPLIER)
+        self.stock = global_vars.CONNECTION_MANAGER.send_command(self.last_search)
         self.fill_stock()
 
     def show_add_stock(self):
