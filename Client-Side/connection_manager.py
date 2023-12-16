@@ -1,9 +1,6 @@
 """
 This file contains the ConnectionManager class for the client
 side.
-
-TODO Commenting
-TODO Connect with main.py
 """
 
 import socket
