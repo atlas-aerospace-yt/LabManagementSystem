@@ -219,7 +219,7 @@ Phone: {stock_item[7]}"
         warning.setIcon(qtw.QMessageBox.Warning)
         warning.setText("Warning - this will delete the selected stock and cannot be undone!")
         warning.setWindowTitle("Warning")
-        warning.setStandardButtons(qtw.QMessageBox.Ok | qtw.QMessageBox.Cancel) 
+        warning.setStandardButtons(qtw.QMessageBox.Ok | qtw.QMessageBox.Cancel)
         output = warning.exec_()
 
         # ONLY if the click "OK" proceed.
