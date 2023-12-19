@@ -52,10 +52,17 @@ class MainUI(qtw.QMainWindow):
         self.connect_buttons()
         self.fill_in_timetable()
 
+        # Two seperate timers, one to update the data on display every minute, one to
+        # constantly check for a valid connection to the server.
         self.update_display()
         timer = qtc.QTimer(self)
         timer.setInterval(60000)
         timer.timeout.connect(self.update_display)
+        timer.start()
+
+        timer = qtc.QTimer(self)
+        timer.setInterval(0)
+        timer.timeout.connect(self.check_connection)
         timer.start()
 
     def connect_buttons(self):
@@ -164,6 +171,22 @@ class MainUI(qtw.QMainWindow):
 
         return times, timetable, date_range
 
+    def check_connection(self):
+        """
+        Verify the connection with the server and inform the user as quickly as possible if
+        the connection is lost.
+        """
+        if not global_vars.CONNECTION_MANAGER.running:
+
+            warning = qtw.QMessageBox()
+            warning.setIcon(qtw.QMessageBox.Critical)
+            warning.setText("Error - The connection to the server has been lost...")
+            warning.setWindowTitle("Error")
+            warning.setStandardButtons(qtw.QMessageBox.Ok | qtw.QMessageBox.Cancel)
+            warning.exec_()
+
+            self.close()
+
     def update_display(self):
         """
         Show all of the bookings on the timetable for the user to interact with.
@@ -172,7 +195,6 @@ class MainUI(qtw.QMainWindow):
         lab which the booking is in. The co-ordinate of the booking on the timetable is
         the key for that dictionary item.
         """
-
         times, timetable, date_range = self.get_data_to_update_display()
 
         # Parse the bookings to add to the timetable

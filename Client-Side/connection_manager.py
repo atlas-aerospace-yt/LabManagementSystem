@@ -44,7 +44,8 @@ class ConnectionManager:
 
             except (ConnectionResetError, ConnectionAbortedError):
                 break
-            if request.lower() == "closed":
+
+            if request.lower() == "close":
                 break
             self.data = request
 
@@ -105,9 +106,10 @@ class ConnectionManager:
         Close the connection between the server side and client side.
         """
         self.running = False
-        self.server.send("close\r\n".encode("UTF-8"))
-        # Wait for the server to respond.
-        while self.running:
+        # Tell the server the connection has been closed (if possible)
+        try:
+            self.server.send("close\r\n".encode("UTF-8"))
+        except OSError:
             pass
 
 
