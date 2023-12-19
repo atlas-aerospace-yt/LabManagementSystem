@@ -6,6 +6,7 @@ import hashlib
 
 from database_manager import DatabaseManager
 from connection_manager import ConnectionManager
+from email_manager import EmailManager
 
 class ServerManager:
     """
@@ -20,6 +21,7 @@ class ServerManager:
 
         self.connection_manager = ConnectionManager()
         self.database_manager = DatabaseManager()
+        self.email_manager = EmailManager(self.database_manager)
 
     def enqueue_sql(self, command:list):
         """
@@ -128,23 +130,27 @@ class ServerManager:
         self.database_manager.send_command(
             f"INSERT INTO INSTITUTION VALUES(\"{new_password_hash}\")")
 
-    def get_information(self) -> str:
+    def get_information(self) -> list:
         """
         Get information about the current number of connections, the IP address and port of
         the connections and any queued commands from the connections.
+
+        Returns:
+            list: the list of strings to give the admins all information.
         """
-        result = ""
+        result = []
 
-        # Get all of the SQL commands waiting to be run
         if self.sql_commands:
-            result += "The SQL commands waiting to be run are:\n"
+            result.append("The SQL commands waiting to be run are:\n")
             for sql_command in self.sql_commands:
-                result += f"    {sql_command}\n"
+                result.append(f"....{sql_command}\n")
 
-        result += f"There are {self.connection_manager.get_num_of_connections()} connection(s)."
+        result.append(
+            f"There are {self.connection_manager.get_num_of_connections()} connection(s).\n")
 
-        result += "The addresses of the connections are:\n"
-        for connection in self.connection_manager.connections:
-            result += f"    {connection.address}\n"
+        if self.connection_manager.connections:
+            result.append("The addresses of the connections are:\n")
+            for connection in self.connection_manager.connections:
+                result.append(f"....{connection.address}\n")
 
         return result

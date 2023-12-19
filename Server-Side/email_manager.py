@@ -17,9 +17,9 @@ class EmailManager:
     """
 
     def __init__(self, database_manager):
-        self.email = smtplib.SMTP('smtp.gmail.com', 587)
-        self.email.starttls()
-        self.email.login("enter_email","enter_pass")
+        #self.email = smtplib.SMTP('smtp.gmail.com', 587)
+        #self.email.starttls()
+        #self.email.login("enter_email","enter_pass")
 
         self.database_manager = database_manager
 
@@ -29,7 +29,7 @@ class EmailManager:
             self.database_manager.send_command("SELECT * FROM BOOKINGS"),
             self.database_manager.send_command("SELECT * FROM USERS")
         ]
-
+        print(self.previous_data)
         self.data = self.previous_data
 
     def send_message(self):

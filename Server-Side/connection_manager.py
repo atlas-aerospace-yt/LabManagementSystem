@@ -43,7 +43,7 @@ class Connection:
                 break
 
             if request.lower() == "close":
-                self.socket.send("closed".encode("utf-8"))
+                self.socket.send("close".encode("utf-8"))
                 break
 
             self.data.append([self.address, request])

@@ -34,7 +34,7 @@ class UserInterface(qtw.QMainWindow):
         self.connect_buttons()
 
         timer = qtc.QTimer(self)
-        timer.setInterval(25)
+        timer.setInterval(100)
         timer.timeout.connect(self.loop)
         timer.start()
 
@@ -46,7 +46,7 @@ class UserInterface(qtw.QMainWindow):
 
     def loop(self):
         """
-        Calls the main loop every 25ms.
+        Calls the main loop every 100ms.
         TODO -> Tidy up this function
         """
         # Loop the backend main loop
@@ -103,17 +103,28 @@ class UserInterface(qtw.QMainWindow):
 
         elif command[:5].lower() == gui.RESET:
             self.server.change_password(command[6:])
-            self.message_attributes.append(gui.RESET_PASSWORD)
+            self.message_attributes.insert(1, gui.RESET_PASSWORD)
 
         elif command[:6].lower() == gui.LOGOUT:
             self.logged_in = False
             self.message_attributes = [gui.MSG_LOGIN]
 
         elif command[:4].lower() == gui.INFO:
-            self.message_attributes.append(self.server.get_information())
+            msgs = self.server.get_information()
+            for i, msg in enumerate(msgs):
+                self.message_attributes.insert(i+1, msg)
 
+        elif command[:10].lower() == gui.DISCONNECT and command[-2:] == "-a":
+            self.server.connection_manager.end_connections()
+            self.server.connection_manager.running = True
+
+        elif command[:10].lower() == gui.DISCONNECT and command[10:].count("-") == 2:
+            print("Disconnecting specific...")
+
+        elif command[:5].lower() == gui.CLEAR:
+            self.message_attributes = [self.message_attributes[0], self.message_attributes[-1]]
         else:
-            self.message_attributes.insert(1, "Invalid input: " + command)
+            self.message_attributes.insert(1, f"Invalid input: \"{command}\"")
 
 
     def verify_login(self, password:str):
