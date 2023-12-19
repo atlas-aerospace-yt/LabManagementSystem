@@ -16,6 +16,7 @@ The options for the admin terminal are:<br>
 \"SQL\" [-sql] - run an SQL command on the server e.g. \"SQL-SELECT * FROM MY_TABLE\"<br>
 \"reset\" [-password] - change the administrator password e.g. \"reset-12345\"<br>
 \"info\" - to get information about the activity<br>
+\"clear\" - clear all of the information shown in the terminal<br>
 \"logout\" - log out of the admin terminal<br>
 \"exit\" - ends the server side program</p>"""
 
@@ -26,7 +27,10 @@ COMMAND_KEY_WORDS = ["info", "disconnect"]
 
 INVALID_PASSWORD = "Invalid password!"
 
-RESET_PASSWORD = "Your new password has been set!"
+RESET_PASSWORD_SUCC = "Your new password has been set."
+RESET_PASSWORD_FAIL = "Please enter a password longer than 4 characters."
+
+DISCONNECT_ALL = "Disconnected all users."
 
 EXIT = "exit"
 SQL = "sql"

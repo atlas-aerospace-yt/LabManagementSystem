@@ -91,19 +91,25 @@ class UserInterface(qtw.QMainWindow):
         command = self.ui.command.text()
         self.ui.command.setText("")
 
+        if len(command) > 10:
+            valid_string = command[10:].count("-") == 2 and command[10:].count(".") == 3
+            valid_string = valid_string and command.split("-")[2].isnumeric()
+
         if not self.logged_in:
             self.verify_login(command)
             return
 
         elif command.lower() == gui.EXIT:
-            qtw.QApplication.instance().quit()
+            self.close()
 
         elif command[:3].lower() == gui.SQL:
             self.server.enqueue_sql(["admin", command[4:]])
 
         elif command[:5].lower() == gui.RESET:
-            self.server.change_password(command[6:])
-            self.message_attributes.insert(1, gui.RESET_PASSWORD)
+            if self.server.change_password(command[6:]):
+                self.message_attributes.insert(1, gui.RESET_PASSWORD_SUCC)
+            else:
+                self.message_attributes.insert(1, gui.RESET_PASSWORD_FAIL)
 
         elif command[:6].lower() == gui.LOGOUT:
             self.logged_in = False
@@ -117,12 +123,16 @@ class UserInterface(qtw.QMainWindow):
         elif command[:10].lower() == gui.DISCONNECT and command[-2:] == "-a":
             self.server.connection_manager.end_connections()
             self.server.connection_manager.running = True
+            self.message_attributes.insert(1, gui.DISCONNECT_ALL)
 
-        elif command[:10].lower() == gui.DISCONNECT and command[10:].count("-") == 2:
-            print("Disconnecting specific...")
-
+        elif command[:10].lower() == gui.DISCONNECT and valid_string:
+            print((command.split("-")[1],command.split("-")[2]))
+            output = self.server.connection_manager.end_connection(
+                (command.split("-")[1],command.split("-")[2]))
+            print(output)
         elif command[:5].lower() == gui.CLEAR:
             self.message_attributes = [self.message_attributes[0], self.message_attributes[-1]]
+
         else:
             self.message_attributes.insert(1, f"Invalid input: \"{command}\"")
 

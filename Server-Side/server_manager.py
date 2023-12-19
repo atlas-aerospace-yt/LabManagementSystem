@@ -120,15 +120,27 @@ class ServerManager:
         self.run_sql_commands()
         self.respond_to_clients()
 
-    def change_password(self, new_password):
+    def change_password(self, new_password:str) -> bool:
         """
         Update the administrator password by hashing the new password, deleting
         the old password and inserting the new password hash.
+
+        Args:
+            new_password(str): The ne password to replace the old one with.
+
+        Return:
+            bool: whether or not the new password is valid
         """
+
+        if len(new_password) < 5:
+            return False
+
         new_password_hash =  hashlib.md5(new_password.encode("UTF-8")).hexdigest()
         self.database_manager.send_command("DELETE FROM INSTITUTION")
         self.database_manager.send_command(
             f"INSERT INTO INSTITUTION VALUES(\"{new_password_hash}\")")
+
+        return True
 
     def get_information(self) -> list:
         """

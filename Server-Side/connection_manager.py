@@ -142,11 +142,27 @@ class ConnectionManager:
                 del self.connections[
                     self.connections.index(connection)]
 
+    def end_connection(self, target:tuple) -> bool:
+        """
+        End a specific connection given an IP address and port.
+
+        Args:
+            target(tuple): the information of the target.
+
+        Returns:
+            bool: whether or not the connection did exist
+        """
+        for i, connection in enumerate(self.connections):
+            if target == (connection.address, connection.port):
+                connection.disconnecct()
+                del self.connections[i]
+                return True
+        return False
+
     def end_connections(self):
         """
         Deletes all connections to the clients.
         """
-        self.running = False
 
         for i, connection in enumerate(self.connections):
             connection.running = False
@@ -157,6 +173,7 @@ class ConnectionManager:
         """
         Stops the server from listening for more clients.
         """
+        self.running = False
         fake_connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         fake_connection.connect((IP_ADDRESS, PORT))
         fake_connection.send("close".encode("UTF-8"))
