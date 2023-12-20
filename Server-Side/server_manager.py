@@ -155,7 +155,7 @@ class ServerManager:
         if self.sql_commands:
             result.append("The SQL commands waiting to be run are:\n")
             for sql_command in self.sql_commands:
-                result.append(f"....{sql_command}\n")
+                result.append(f"{sql_command}\n")
 
         result.append(
             f"There are {self.connection_manager.get_num_of_connections()} connection(s).\n")
@@ -163,6 +163,6 @@ class ServerManager:
         if self.connection_manager.connections:
             result.append("The addresses of the connections are:\n")
             for connection in self.connection_manager.connections:
-                result.append(f"....{connection.address}\n")
+                result.append(f"{connection.address}\n")
 
         return result

@@ -31,6 +31,8 @@ RESET_PASSWORD_SUCC = "Your new password has been set."
 RESET_PASSWORD_FAIL = "Please enter a password longer than 4 characters."
 
 DISCONNECT_ALL = "Disconnected all users."
+DISCONNECT_SPECIFIC = "Disconnected a specific user - "
+DISCONNECT_SPECIFIC_FAIL = "User was not connected, could not disconnect!"
 
 EXIT = "exit"
 SQL = "sql"

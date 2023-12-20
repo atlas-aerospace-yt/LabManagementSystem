@@ -65,6 +65,7 @@ class Connection:
         """
         Disconnects the user from the server.
         """
+        self.socket.send("close".encode("utf-8"))
         self.socket.close()
 
 
@@ -137,10 +138,13 @@ class ConnectionManager:
         """
         Removes all of the clients who have disconnected from the list.
         """
-        for connection in self.connections:
+        deleted_connections = []
+        for i, connection in enumerate(self.connections):
             if connection.disconnected is True:
-                del self.connections[
-                    self.connections.index(connection)]
+                deleted_connections.append(i)
+        # Delete the connections from the list after all are disconnected.
+        for indx in deleted_connections:
+            del self.connections[indx]
 
     def end_connection(self, target:tuple) -> bool:
         """
@@ -153,8 +157,8 @@ class ConnectionManager:
             bool: whether or not the connection did exist
         """
         for i, connection in enumerate(self.connections):
-            if target == (connection.address, connection.port):
-                connection.disconnecct()
+            if target == connection.address:
+                connection.disconnect()
                 del self.connections[i]
                 return True
         return False
@@ -163,10 +167,10 @@ class ConnectionManager:
         """
         Deletes all connections to the clients.
         """
-
         for i, connection in enumerate(self.connections):
             connection.running = False
             connection.disconnect()
+        for i, _ in enumerate(self.connections):
             del self.connections[i]
 
     def end_server(self):

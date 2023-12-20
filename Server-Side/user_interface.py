@@ -8,6 +8,7 @@ from PyQt5 import QtCore as qtc
 from PyQt5 import QtWidgets as qtw
 
 import Definitions.gui_definitions as gui
+
 from server_manager import ServerManager
 from Ui.server_side import Ui_MainWindow as terminal
 
@@ -126,10 +127,13 @@ class UserInterface(qtw.QMainWindow):
             self.message_attributes.insert(1, gui.DISCONNECT_ALL)
 
         elif command[:10].lower() == gui.DISCONNECT and valid_string:
-            print((command.split("-")[1],command.split("-")[2]))
-            output = self.server.connection_manager.end_connection(
-                (command.split("-")[1],command.split("-")[2]))
-            print(output)
+            target = (command.split("-")[1], int(command.split("-")[2]))
+            disconnected = self.server.connection_manager.end_connection(target)
+            if disconnected:
+                self.message_attributes.insert(1, gui.DISCONNECT_SPECIFIC + str(target))
+            else:
+                self.message_attributes.insert(1, gui.DISCONNECT_SPECIFIC_FAIL)
+
         elif command[:5].lower() == gui.CLEAR:
             self.message_attributes = [self.message_attributes[0], self.message_attributes[-1]]
 
