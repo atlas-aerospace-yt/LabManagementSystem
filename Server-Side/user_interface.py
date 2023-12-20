@@ -10,7 +10,7 @@ from PyQt5 import QtWidgets as qtw
 import Definitions.gui_definitions as gui
 
 from server_manager import ServerManager
-from Ui.server_side import Ui_MainWindow as terminal
+from Ui.ServerSide import Ui_MainWindow as terminal
 
 class UserInterface(qtw.QMainWindow):
     """
@@ -50,14 +50,14 @@ class UserInterface(qtw.QMainWindow):
         Calls the main loop every 100ms.
         TODO -> Tidy up this function
         """
-        # Loop the backend main loop
+        # Loop the backend main loop.
         self.server.main_loop()
 
-        # Update the number of connections displayed on the screen
+        # Update the number of connections displayed on the screen.
         connections = self.server.connection_manager.get_num_of_connections()
         self.ui.num_of_connections.setText(f"Connections: {connections}")
 
-        # Add new results to the messages
+        # Add new results to the messages.
         results = self.server.dequeue_admin_sql()
 
         for result in reversed(results.split("\n")):

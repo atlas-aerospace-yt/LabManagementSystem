@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\server_side.ui'
+# Form implementation generated from reading ui file '.\ServerSide.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.7
 #
@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(669, 434)
+        MainWindow.resize(669, 424)
         MainWindow.setStyleSheet("/*General Styling*/\n"
 "\n"
 "* {\n"
@@ -64,11 +64,11 @@ class Ui_MainWindow(object):
 "}\n"
 "QScrollBar::add-page, QScrollBar::sub-page \n"
 "{\n"
-"    background-color: #ffffff;\n"
+"    background: #ffffff;\n"
 "}\n"
 "QScrollBar::add-line, QScrollBar::sub-line \n"
 "{\n"
-"    background-color: #ffffff;\n"
+"    background: #ffffff;\n"
 "}\n"
 "QScrollBar::handle\n"
 "{\n"
@@ -91,19 +91,38 @@ class Ui_MainWindow(object):
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.gridLayout = QtWidgets.QGridLayout()
         self.gridLayout.setObjectName("gridLayout")
-        self.terminal = QtWidgets.QTextBrowser(self.centralwidget)
-        self.terminal.setMinimumSize(QtCore.QSize(200, 150))
-        self.terminal.setObjectName("terminal")
-        self.gridLayout.addWidget(self.terminal, 1, 0, 1, 2)
-        self.command = QtWidgets.QLineEdit(self.centralwidget)
-        self.command.setMinimumSize(QtCore.QSize(0, 40))
-        self.command.setObjectName("command")
-        self.gridLayout.addWidget(self.command, 2, 0, 1, 2)
         self.num_of_connections = QtWidgets.QLabel(self.centralwidget)
         self.num_of_connections.setMinimumSize(QtCore.QSize(250, 40))
         self.num_of_connections.setAlignment(QtCore.Qt.AlignCenter)
         self.num_of_connections.setObjectName("num_of_connections")
-        self.gridLayout.addWidget(self.num_of_connections, 0, 0, 1, 2)
+        self.gridLayout.addWidget(self.num_of_connections, 0, 1, 1, 2)
+        self.command = QtWidgets.QLineEdit(self.centralwidget)
+        self.command.setMinimumSize(QtCore.QSize(0, 40))
+        self.command.setObjectName("command")
+        self.gridLayout.addWidget(self.command, 2, 1, 1, 2)
+        self.gridWidget = QtWidgets.QWidget(self.centralwidget)
+        self.gridWidget.setStyleSheet("* {\n"
+"\n"
+"    background-color: #ffffff;\n"
+"    border-radius: 20px;\n"
+"}\n"
+"")
+        self.gridWidget.setObjectName("gridWidget")
+        self.gridLayout_3 = QtWidgets.QGridLayout(self.gridWidget)
+        self.gridLayout_3.setObjectName("gridLayout_3")
+        self.terminal = QtWidgets.QTextBrowser(self.gridWidget)
+        self.terminal.setMinimumSize(QtCore.QSize(200, 150))
+        self.terminal.setObjectName("terminal")
+        self.gridLayout_3.addWidget(self.terminal, 1, 1, 1, 1)
+        spacerItem = QtWidgets.QSpacerItem(10, 10, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout_3.addItem(spacerItem, 0, 1, 1, 1)
+        spacerItem1 = QtWidgets.QSpacerItem(10, 10, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout_3.addItem(spacerItem1, 1, 2, 1, 1)
+        spacerItem2 = QtWidgets.QSpacerItem(10, 10, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout_3.addItem(spacerItem2, 1, 0, 1, 1)
+        spacerItem3 = QtWidgets.QSpacerItem(10, 10, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout_3.addItem(spacerItem3, 2, 1, 1, 1)
+        self.gridLayout.addWidget(self.gridWidget, 1, 2, 1, 1)
         self.gridLayout_2.addLayout(self.gridLayout, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -116,13 +135,13 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Server Side"))
+        self.num_of_connections.setText(_translate("MainWindow", "Connections: 0"))
+        self.command.setPlaceholderText(_translate("MainWindow", "Please enter command here."))
         self.terminal.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Roboto\'; font-size:14px; font-weight:400; font-style:normal;\">\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
-        self.command.setPlaceholderText(_translate("MainWindow", "Please enter command here."))
-        self.num_of_connections.setText(_translate("MainWindow", "Connections: 0"))
 
 
 if __name__ == "__main__":
