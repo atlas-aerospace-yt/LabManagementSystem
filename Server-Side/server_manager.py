@@ -150,7 +150,7 @@ class ServerManager:
         Returns:
             list: the list of strings to give the admins all information.
         """
-        result = []
+        result = [f"There are {len(self.sql_commands)} command(s) to be run.\n"]
 
         if self.sql_commands:
             result.append("The SQL commands waiting to be run are:\n")
