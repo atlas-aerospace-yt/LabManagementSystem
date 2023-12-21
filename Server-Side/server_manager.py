@@ -8,6 +8,8 @@ from database_manager import DatabaseManager
 from connection_manager import ConnectionManager
 from email_manager import EmailManager
 
+EMAIL_CHECK_FREQ = 50
+
 class ServerManager:
     """
     The server manager class handles all of the admin inputs
@@ -16,6 +18,8 @@ class ServerManager:
     """
 
     def __init__(self):
+        self.counter = -1
+
         self.sql_commands = []
         self.sql_results = []
 
@@ -119,6 +123,11 @@ class ServerManager:
         self.get_all_sql_commands()
         self.run_sql_commands()
         self.respond_to_clients()
+
+        self.counter += 1
+        if self.counter % EMAIL_CHECK_FREQ == 0:
+            self.email_manager.compare_data()
+            self.counter = 1
 
     def change_password(self, new_password:str) -> bool:
         """
