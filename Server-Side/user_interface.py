@@ -166,3 +166,4 @@ class UserInterface(qtw.QMainWindow):
         self.server.database_manager.end_connection()
         self.server.connection_manager.end_server()
         self.server.connection_manager.end_connections()
+        self.server.email_manager.close_email()
