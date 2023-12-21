@@ -4,6 +4,8 @@ Lab Management system.
 """
 
 # Python PIP libraries see requirements.txt for more
+import webbrowser
+
 from datetime import datetime, timedelta
 
 from PyQt5 import QtCore as qtc
@@ -71,12 +73,12 @@ class MainUI(qtw.QMainWindow):
         of the code.
         """
         self.ui.account.clicked.connect(self.open_account_window)
-        self.ui.help.clicked.connect(self.test)
+        self.ui.help.clicked.connect(self.open_help)
         self.ui.log_experiment.clicked.connect(self.open_graph_window)
         self.ui.manage_stock.clicked.connect(self.open_stock_window)
         self.ui.date_range.activated[str].connect(self.update_display)
 
-    def add_widget_to_timetable(self, text, pos, stylesheet="", scale=False):
+    def add_widget_to_timetable(self, text:str, pos:tuple, stylesheet:str="", scale:bool=False):
         """
         Add a widget to the timetable grid on the front of the screen.
 
@@ -85,8 +87,7 @@ class MainUI(qtw.QMainWindow):
 
         Args:
             text(str): the text to put on the QTextBrowser
-            pos_i(int): the row to put the widget in
-            pos_j(int): the column to put the widget in
+            pos(tuple): the row, col to put the widget in
             stylesheet(str): the css to style the QTextBrowser
         """
         self.time_table_widgets[pos[0]].append(qtw.QPushButton(text))
@@ -100,7 +101,7 @@ class MainUI(qtw.QMainWindow):
         if not scale:
             self.time_table_widgets[pos[0]][pos[1]].setMinimumHeight(50)
 
-    def format_time(self, time_hh_mm_ss:str):
+    def format_time(self, time_hh_mm_ss:str) -> str:
         """
         Takes in the time in the format hh:mm:ss and puts it into the format
         of hh:mm.
@@ -227,7 +228,7 @@ class MainUI(qtw.QMainWindow):
                     self.time_table_widgets[i][j].setText("")
                     self.time_table_widgets[i][j].setStyleSheet(gui.PLAIN_CSS)
 
-    def open_booking_window(self, i, j):
+    def open_booking_window(self, i:int, j:int):
         """
         This function opens the booking window for the users to book stock.
 
@@ -275,8 +276,8 @@ class MainUI(qtw.QMainWindow):
         """
         StockManager(self)
 
-    def test(self):
+    def open_help(self):
         """
-        A test function to show button clicks.
+        Open google to demonstrate opening a help page.
         """
-        print("Worked!")
+        webbrowser.open("https://google.com")
