@@ -41,3 +41,5 @@ LOGOUT = "logout"
 INFO = "info"
 CLEAR = "clear"
 DISCONNECT = "disconnect"
+
+COUNTER = 0
