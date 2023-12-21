@@ -34,6 +34,10 @@ jobs:
       run: |
         pylint ./Server-Side/connection_manager.py --disable=W0511
 
+    - name: Analysing email_manager.py
+      run: |
+        pylint ./Server-Side/email_manager.py --disable=W0511
+
     - name: Analysing server-side.py
       run: |
         pylint ./Server-Side/main.py --disable=W0511
