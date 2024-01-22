@@ -11,14 +11,19 @@ import copy
 
 from email.message import EmailMessage
 
+# This email neeeds to be changed to the email that receives
+# institution wide notifications.
 INSTITUTION_EMAIL = "INSTITUTION_EMAIL"
 
+# This is the email which sends out the notification to all of
+# the recipients.
 SENDER_EMAIL = "SENDER_EMAIL"
 SENDER_PASS = "APP_PASSWORD"
 
 class EmailManager:
     """
-    Handle email communications.
+    Handle email communications when changes are made to the database. Then
+    check which changes were made and send out the correct notification.
     """
 
     def __init__(self, database_manager):
