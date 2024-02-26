@@ -116,7 +116,8 @@ class GraphManager(qtw.QMainWindow):
         """
         This displays the graph in a matplotlib.pyplot for the user to see and interact
         with as they wish.
-        The line of best fit followed this tutorial: https://www.statology.org/line-of-best-fit-python/.
+        The line of best fit followed this tutorial:
+        https://www.statology.org/line-of-best-fit-python/.
         """
 
         x = np.array(self.x_co_ordinates, dtype=np.float64)
